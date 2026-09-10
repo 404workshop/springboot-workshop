@@ -76,9 +76,9 @@ Spring Boot uses **Spring Profiles** to switch configurations cleanly without ed
    ```bash
    .\mvnw.cmd spring-boot:run
    ```
-2. **PostgreSQL Profile**: Activate the `postgres` profile to use PostgreSQL for production/persistence:
+2. **Production Profile (PostgreSQL)**: Activate the `production` profile to use PostgreSQL for production/persistence:
    ```bash
-   .\mvnw.cmd spring-boot:run -Dspring-boot.run.profiles=postgres
+   .\mvnw.cmd spring-boot:run -Dspring-boot.run.profiles=production
    ```
    * **PostgreSQL Setup & Download (Windows):**
      * **Command-line installation (Winget):**
@@ -94,7 +94,7 @@ Spring Boot uses **Spring Profiles** to switch configurations cleanly without ed
        ```sql
        CREATE DATABASE ecommerce_db;
        ```
-     * Configure credentials in `src/main/resources/application-postgres.properties`.
+     * Configure credentials in `src/main/resources/application-production.properties`.
 
 ### Running Tests (TDD & Component Verification)
 Run unit and integration tests using Maven:

@@ -4,7 +4,6 @@ import com.convergence.ecommerce.dto.ProductRequestDTO;
 import com.convergence.ecommerce.dto.ProductResponseDTO;
 import com.convergence.ecommerce.model.ProductEntity;
 import com.convergence.ecommerce.repository.ProductRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,10 +11,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
 public class ProductService {
 
     private final ProductRepository productRepository;
+
+    // Constructor Injection (Spring DI)
+    public ProductService(ProductRepository productRepository) {
+        this.productRepository = productRepository;
+    }
 
     @Transactional(readOnly = true)
     public List<ProductResponseDTO> getAllProducts() {
@@ -33,13 +36,12 @@ public class ProductService {
 
     @Transactional
     public ProductResponseDTO createProduct(ProductRequestDTO requestDTO) {
-        ProductEntity entity = ProductEntity.builder()
-                .name(requestDTO.getName())
-                .description(requestDTO.getDescription())
-                .price(requestDTO.getPrice())
-                .stockQuantity(requestDTO.getStockQuantity())
-                .category(requestDTO.getCategory())
-                .build();
+        ProductEntity entity = new ProductEntity();
+        entity.setName(requestDTO.getName());
+        entity.setDescription(requestDTO.getDescription());
+        entity.setPrice(requestDTO.getPrice());
+        entity.setStockQuantity(requestDTO.getStockQuantity());
+        entity.setCategory(requestDTO.getCategory());
 
         ProductEntity savedEntity = productRepository.save(entity);
         return mapToResponseDTO(savedEntity);
@@ -69,14 +71,14 @@ public class ProductService {
     }
 
     private ProductResponseDTO mapToResponseDTO(ProductEntity entity) {
-        return ProductResponseDTO.builder()
-                .id(entity.getId())
-                .name(entity.getName())
-                .description(entity.getDescription())
-                .price(entity.getPrice())
-                .stockQuantity(entity.getStockQuantity())
-                .category(entity.getCategory())
-                .createdAt(entity.getCreatedAt())
-                .build();
+        ProductResponseDTO dto = new ProductResponseDTO();
+        dto.setId(entity.getId());
+        dto.setName(entity.getName());
+        dto.setDescription(entity.getDescription());
+        dto.setPrice(entity.getPrice());
+        dto.setStockQuantity(entity.getStockQuantity());
+        dto.setCategory(entity.getCategory());
+        dto.setCreatedAt(entity.getCreatedAt());
+        return dto;
     }
 }
