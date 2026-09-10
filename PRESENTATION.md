@@ -1,7 +1,7 @@
 # Convergence 2026: Spring Boot & Enterprise Architecture Masterclass
 
 **Event:** Convergence 2026, GDGC VNR VJIET  
-**Duration:** 3 Hours (10 min Setup + 40 min Talk + 110 min Live Coding + 20 min Q&A) — hands-on pace unchanged, talk expanded  
+**Duration:** 3 Hours (10 min Setup + 45 min Talk + 105 min Live Coding + 20 min Q&A) — talk expanded, hands-on pace unchanged (5 min trimmed via checkpoints)  
 **Speaker / Co-Pilot:** Expert Java/Spring Boot Technical Architect  
 **Pre-req for students:** Core Java + basic HTTP/JSON — no Spring experience needed
 
@@ -12,21 +12,47 @@
 | Block | Time | Focus |
 |-------|------|-------|
 | Setup | 10 min | Verify JDK 17, clone, `.\mvnw.cmd spring-boot:run` → `[]` on H2 |
-| **Talk — Concepts Before Code** | **40 min** | Slides 1–9 below |
-| Hands-on | 110 min | `step-0` → `step-3` (see Part 2) |
+| **Talk — Concepts Before Code** | **45 min** | Slides 1–10 below (incl. why Spring Boot vs Node/Python/Go + why code in agent era) |
+| Hands-on | 105 min | `step-0` → `step-3` (see Part 2) |
 | Q&A | 20 min | Profiles, curl, Postgres, debugging |
 
 > This deck is the **only theory you need before coding**. Every live-coding branch maps 1:1 to a slide.
 
 ---
 
-## Part 1: Concepts Before Code (40 Minutes)
+## Part 1: Concepts Before Code (45 Minutes)
 
-### Slide 1 — Welcome & The Modern Backend Landscape (3 min)
+### Slide 1 — Welcome & The Modern Backend Landscape (2 min)
 * **Title:** Building Production-Grade APIs with Spring Boot 3
 * **Takeaway:** Spring Boot is the industry standard for enterprise Java — ecosystem, convention-over-configuration, enterprise readiness, 70%+ of Java microservices (JetBrains/JVM surveys).
 * **Audience framing:** You know `public static void main` + JDBC — today we replace boilerplate with Spring idioms.
 * **Workshop promise:** By `step-3-complete` you will have: `@RestController` → `@Service` → `JpaRepository` → H2/Postgres, with `curl` + tests green.
+
+### Slide 1B — Why Spring Boot in 2026? (When Node / Python / Go Are "Easier") (4 min)
+* **Every stack has a home — know when to pick it:**
+  | Stack | Sweet spot | Trade-off at scale |
+  |-------|------------|-------------------|
+  | **Node (JS/TS)** | Fast MVP, full-stack JS, high I/O / chat apps | Dynamic typing → runtime bugs, single-thread, callback/promise complexity, weak transactions |
+  | **Python** | AI/ML scripting, fastest to write | GIL, slow per-request, optional typing, fewer transactional guarantees, ORM less mature |
+  | **Go** | Infra, CLI, high-concurrency services | Minimal enterprise ecosystem (no Spring Security/Batch/Data equivalent), verbose errors, small talent pool for large CRUD apps |
+  | **Java + Spring Boot** | **Enterprise systems that must run 5–10 years with 50 engineers** | More boilerplate (we trade brevity for safety) |
+* **Why Spring Boot wins for this workshop's domain (E-Commerce API that must be correct):**
+  1. **Type safety + compile-time contracts** — `ProductRequestDTO` `@NotBlank`/`@Positive` caught before runtime vs JS `undefined is not a function`.
+  2. **Ecosystem** — Security, Data JPA, Validation, Cloud, Batch, Kafka — one paradigm, not 20 npm/pip packages.
+  3. **Performance + operations** — JVM JIT/G1GC, HikariCP, embedded Tomcat tuned for 1k+ rps; `java -jar` in Docker, no runtime install.
+  4. **Team scale** — Explicit layers (`Controller→Service→Repository`), constructor DI, `@Transactional` make 200-student/50-engineer code reviewable.
+* **Takeaway:** Prototype in Node/Python, tool in Go, **run the business in Spring Boot**. This workshop teaches the patterns that get you hired for the last bucket — and they transfer when you pick Go/Node later.
+
+### Slide 1C — Why Learn to Code When Agents Write Code? (3 min)
+* **The 2026 reality:** Agents (Cursor, Copilot, Muse) write the 80% — `ProductController` CRUD, DTOs, even `ProductRepository` — in seconds.
+* **Why your coding skill matters more, not less:**
+  1. **You own the 20% the agent gets wrong.** Hallucinated `DataSource` hard-wiring, missing `@Valid`, wrong `204 vs 200`, no `@Transactional` — only someone who understands IoC/DI/lifecycle catches it live.
+  2. **Review > Generation.** Senior today = *spec → generate → verify → ship*. Verification needs fundamentals — exactly what Slides 2–9 give you. Without them you ship the agent's bug.
+  3. **Agents need architecture.** They autocomplete files, they don't choose H2 vs Postgres, `ddl-auto=update` vs migrations, or `404` vs `400` — you do.
+  4. **Durability:** Languages change (Node→Go→?), patterns don't — IoC, transactions, layered architecture, externalized config survive every hype cycle.
+* **Workshop stance:** We code *without* an agent first so you can judge one after. In Q&A we will ask an agent to generate `ProductService` and you will spot the missing constructor injection — that's the skill.
+
+> **Bridge:** "If you can explain why `ProductService` takes `ProductRepository` in its constructor and why `application-production.properties` is not hard-coded, you can pilot any agent tomorrow."
 
 ### Slide 2 — Spring vs Spring Boot: What Boot Gives You (5 min)
 * **Spring (the framework):** IoC container, DI, AOP, transactions — powerful but verbose XML/Java config.
