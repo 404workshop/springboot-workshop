@@ -186,6 +186,27 @@ Run unit and integration tests using Maven:
 .\mvnw.cmd test
 ```
 
+### Clean Build Commands
+```bash
+# Remove previous build artifacts
+.\mvnw.cmd clean
+
+# Clean + compile sources
+.\mvnw.cmd clean compile
+
+# Clean + run tests
+.\mvnw.cmd clean test
+# With production profile (PowerShell: quotes required)
+.\mvnw.cmd clean test "-Dspring.profiles.active=production"
+
+# Clean + package executable JAR (skips tests if needed)
+.\mvnw.cmd clean package
+.\mvnw.cmd clean package "-DskipTests"
+
+# Clean + install to local Maven repo
+.\mvnw.cmd clean install
+```
+
 ---
 
 ## 🌿 Step-by-Step Checkpoints (Git Branches)
