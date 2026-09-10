@@ -35,7 +35,7 @@ To regenerate from zero, follow this exact order (verified against `pom.xml:6`, 
 - **Postgres password:** Default `secret` in `.env.example` rarely matches local install → `FATAL: password authentication failed` → update `.env` or `$env:POSTGRES_PASSWORD`.
 - **`psql` PATH (Windows):** Installer not on PATH → use `& "C:\Program Files\PostgreSQL\16\bin\psql.exe"` or add via `[Environment]::SetEnvironmentVariable("PATH", ..., Machine)` + restart terminal.
 - **Service start needs Admin:** `Start-Service postgresql-x64-16` / `net start postgresql-x64-16` requires elevated shell; `Get-Service`/`sc query` does not. Linux: `systemctl status/start postgresql`, macOS: `brew services list/start`.
-- **`.vscode/` is gitignored** (`-.gitignore:5`) but `launch.json`/`extensions.json` are tracked via wrapper — check `git status` before assuming not committed.
+- **`.vscode/` is gitignored** (`.gitignore:5` = `.vscode/*` + `!launch.json`/`!extensions.json`) — `settings.json` is ignored, `launch.json`/`extensions.json` stay tracked. `target/` was once committed in `d21f129` → now untracked via `git rm --cached -r target`.
 
 ## Verification
 
