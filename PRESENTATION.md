@@ -30,11 +30,15 @@ footer: "GDGC VNR VJIET · neilghosh/springboot-workshop"
 
 ## Part 1: Concepts Before Code (45 Minutes)
 
+---
+
 ### Slide 1 — Welcome & The Modern Backend Landscape (2 min)
 * **Title:** Building Production-Grade APIs with Spring Boot 3
 * **Takeaway:** Spring Boot is the industry standard for enterprise Java — ecosystem, convention-over-configuration, enterprise readiness, 70%+ of Java microservices (JetBrains/JVM surveys).
 * **Audience framing:** You know `public static void main` + JDBC — today we replace boilerplate with Spring idioms.
 * **Workshop promise:** By `step-3-complete` you will have: `@RestController` → `@Service` → `JpaRepository` → H2/Postgres, with `curl` + tests green.
+
+---
 
 ### Slide 1B — Why Spring Boot in 2026? (When Node / Python / Go Are "Easier") (4 min)
 * **Every stack has a home — know when to pick it:**
@@ -51,6 +55,8 @@ footer: "GDGC VNR VJIET · neilghosh/springboot-workshop"
   4. **Team scale** — Explicit layers (`Controller→Service→Repository`), constructor DI, `@Transactional` make 200-student/50-engineer code reviewable.
 * **Takeaway:** Prototype in Node/Python, tool in Go, **run the business in Spring Boot**. This workshop teaches the patterns that get you hired for the last bucket — and they transfer when you pick Go/Node later.
 
+---
+
 ### Slide 1C — Why Learn to Code When Agents Write Code? (3 min)
 * **The 2026 reality:** Agents (Cursor, Copilot, Muse) write the 80% — `ProductController` CRUD, DTOs, even `ProductRepository` — in seconds.
 * **Why your coding skill matters more, not less:**
@@ -61,6 +67,8 @@ footer: "GDGC VNR VJIET · neilghosh/springboot-workshop"
 * **Workshop stance:** We code *without* an agent first so you can judge one after. In Q&A we will ask an agent to generate `ProductService` and you will spot the missing constructor injection — that's the skill.
 
 > **Bridge:** "If you can explain why `ProductService` takes `ProductRepository` in its constructor and why `application-production.properties` is not hard-coded, you can pilot any agent tomorrow."
+
+---
 
 ### Slide 2 — Spring vs Spring Boot: What Boot Gives You (5 min)
 * **Spring (the framework):** IoC container, DI, AOP, transactions — powerful but verbose XML/Java config.
@@ -77,12 +85,16 @@ footer: "GDGC VNR VJIET · neilghosh/springboot-workshop"
 
 * **Demo cue (30 sec):** Comment out `spring-boot-starter-web` in `pom.xml` → `./mvnw spring-boot:run` fails: "Web server failed" — proves auto-configuration is conditional.
 
+---
+
 ### Slide 3 — Spring Boot Features You Will Actually Use (7 min)
 * **Auto-configuration deep dive (2 min):** `@SpringBootApplication = @Configuration + @EnableAutoConfiguration + @ComponentScan`. `spring.factories` → 150+ `*AutoConfiguration` classes. Example: `DataSourceAutoConfiguration` creates `HikariDataSource` when `spring.datasource.url` exists + `HikariCP` + `postgresql` on classpath.
 * **Starter anatomy (1 min):** `spring-boot-starter-data-jpa` = `spring-data-jpa + hibernate-core + HikariCP + transactions`. You import one, you get the stack.
 * **Externalized config + Profiles (2 min):** `application.properties` (default, H2, `ddl-auto=update`) ships safe defaults for 200 students. `application-production.properties` overrides only `datasource.url/username/password` + `PostgreSQLDialect` via `${POSTGRES_URL:...}` — 12-factor. `.env` auto-loaded, never committed (`-.gitignore:2`). Run: `.\mvnw.cmd spring-boot:run "-Dspring-boot.run.profiles=production"` vs `$env:SPRING_PROFILES_ACTIVE=production`.
 * **Other Boot features mentioned (so students recognise them later):** Actuator (`/actuator/health` — add `spring-boot-starter-actuator` to enable), embedded Tomcat (port `8080` in `application.properties:4`), `spring.jpa.show-sql=true` for SQL logging, `H2 Console` at `/h2-console`.
 * **What Boot is NOT:** No code generation — just conditional beans. You can exclude auto-config: `@SpringBootApplication(exclude = DataSourceAutoConfiguration.class)`.
+
+---
 
 ### Slide 4 — Inversion of Control: Who Creates the Objects? (5 min)
 * **Without IoC (tight coupling):**
@@ -110,6 +122,8 @@ footer: "GDGC VNR VJIET · neilghosh/springboot-workshop"
 ```
 * **Why it matters for workshop:** You never `new` a Service/Repository — container does it. That's why `ProductController` has an explicit constructor (`controller/ProductController.java:14`) not `new`.
 
+---
+
 ### Slide 5 — Dependency Injection: The How (7 min)
 * **Three injection styles — only one belongs in this workshop:**
 
@@ -124,12 +138,16 @@ footer: "GDGC VNR VJIET · neilghosh/springboot-workshop"
 * **Failure modes to demo (1 min):** Two beans of same type → `NoUniqueBeanDefinitionException` → fix with `@Qualifier` or `@Primary`. Circular constructor deps → `BeanCurrentlyInCreationException` → fix by refactoring.
 * **Bean scope quick mention:** Default `singleton` (one per app), `prototype` (new per injection), `request/session` (web only) — workshop uses singleton throughout.
 
+---
+
 ### Slide 6 — Bean Lifecycle (2 min — slot into DI)
 ```text
   Instantiate → Populate properties (DI) → BeanNameAware → @PostConstruct → InitializingBean → ready → @PreDestroy → destroy
 ```
 * `ProductEntity` uses `@PrePersist` (JPA, not Spring) to set `createdAt` — different lifecycle, but shows "hook" idea.
 * `@Transactional` is a proxy wrapped around the bean — reason you must call through Spring proxy, not `this.method()` internally.
+
+---
 
 ### Slide 7 — The Request Lifecycle (DispatcherServlet & Layers) (3 min)
 ```text
@@ -149,11 +167,15 @@ footer: "GDGC VNR VJIET · neilghosh/springboot-workshop"
 ```
 * Every `@GetMapping`/`@PostMapping` is a handler method — not a servlet you write.
 
+---
+
 ### Slide 8 — Layered Architecture & Separation of Concerns (3 min)
 1. **Controller (`@RestController`)** — HTTP only: mapping, status (`201 Created`, `404 Not Found`), validation (`@Valid`). No SQL, no business rules.
 2. **Service (`@Service`)** — Business rules, transactions (`@Transactional` in `ProductService.java:23`), DTO↔Entity mapping (`mapToResponseDTO`). Decides "product not found" → exception → `GlobalExceptionHandler`.
 3. **Repository (`JpaRepository`)** — Persistence only: `findAll()`, `findByCategory()` — no hand-written SQL. Hibernate + dialect (`H2Dialect` vs `PostgreSQLDialect`) hides DB differences.
 * **Rule:** Controllers never touch `Entity`; Services never touch `HttpStatus` — keeps layers testable.
+
+---
 
 ### Slide 9 — Why DI Makes This Workshop Work (Profile-Driven Injection) (5 min)
 * **Hard-wiring failure:** `new PostgresDataSource(...)` in code → tests need Postgres, workshop needs 200 DB installs, profile switch = code change.
@@ -174,6 +196,8 @@ footer: "GDGC VNR VJIET · neilghosh/springboot-workshop"
   * **During live coding / `.\mvnw.cmd test`:** H2 injected — zero install, tests in <3 sec (`src/test/.../ProductControllerIntegrationTest.java` uses `@SpringBootTest` + `MockMvc` against H2).
   * **In real deploy:** `-Dspring-boot.run.profiles=production` injects `HikariDataSource` with `PostgreSQLDialect` — zero code change in `ProductService`.
   * **Proof:** `git checkout step-0-starter` (H2) → `curl []` works; `git checkout step-3-complete` + `production` → `\dt` shows `products` with same curl.
+
+---
 
 ### Slide 10 — Before We Code: What You Will Type vs What Boot Does For You (1 min)
 * **You type:** DTOs + Entity + Repository interface + Service + Controller + `application*.properties` (~200 LOC, verbose, no Lombok).
