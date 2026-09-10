@@ -59,6 +59,33 @@
 2. **Service Layer (`@Service`)**: Encapsulates core business logic, transaction boundaries (`@Transactional`), and data transformation (DTO ↔ Entity).
 3. **Repository Layer (`JpaRepository`)**: Manages database persistence without writing boilerplate SQL queries.
 
+### Slide 5: Why Dependency Injection? (Hard-Wiring vs Profile-Driven DI)
+* **The Problem with Hard-Wiring (`new`):**
+  If `ProductService` or `ProductRepository` hard-wired `new PostgresDataSource(...)`, your code would be tightly coupled to PostgreSQL. Your automated tests would fail without a running database, and running on a peer's laptop would require full database setup.
+* **The DI Solution (Profile-Based Injection):**
+  The Spring IoC container manufactures and injects the appropriate `DataSource` bean at runtime based on the active profile:
+
+```text
+               +-------------------------------------------+
+               |           Spring IoC Container            |
+               |                                           |
+               |   Active Profile?                         |
+               |      ├── default  ──> [ H2 DataSource ]   |
+               |      └── production ─> [ Postgres DS ]   |
+               +---------------------+---------------------+
+                                     │
+                                     ▼ (Injected via DI)
+                       [ ProductRepository / JPA ]
+                                     │
+                                     ▼
+                        [ ProductService (Blind) ]
+```
+
+* **Why this is powerful for TDD & Production:**
+  * **During Tests / Local Dev (`default`):** Spring injects the fast, in-memory H2 `DataSource`. Zero installation required, tests run in milliseconds.
+  * **In Production (`production`):** Pass `-Dspring-boot.run.profiles=production` to inject the high-performance PostgreSQL `HikariDataSource`.
+  * **Zero Code Changes:** Not a single line of Java business code in `ProductService` changes between development and production!
+
 ---
 
 ## Part 2: Hands-On Live Coding Roadmap (2 Hours)
