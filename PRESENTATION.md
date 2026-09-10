@@ -4,6 +4,20 @@ theme: gaia
 paginate: true
 header: "Convergence 2026 — Spring Boot Workshop"
 footer: "GDGC VNR VJIET · neilghosh/springboot-workshop"
+size: 16:9
+style: |
+  section { padding: 40px 50px; font-size: 26px; line-height: 1.35; overflow: hidden; }
+  h1 { font-size: 1.45em; margin: 0.3em 0 0.2em; }
+  h2 { font-size: 1.2em; margin: 0.3em 0 0.2em; }
+  h3 { font-size: 1.05em; margin: 0.3em 0 0.2em; }
+  p, ul, ol { margin: 0.4em 0 0; }
+  li { margin: 0.15em 0 0; }
+  table { font-size: 0.62em; line-height: 1.25; margin: 0.5em 0 0; }
+  table th, table td { padding: 0.25em 0.4em; }
+  pre, code { font-size: 0.72em; }
+  pre { margin: 0.4em 0 0; max-height: 42vh; overflow: auto; }
+  blockquote { font-size: 0.82em; margin: 0.4em 0 0; }
+  header, footer { font-size: 0.55em; }
 ---
 
 # Convergence 2026: Spring Boot & Enterprise Architecture Masterclass
