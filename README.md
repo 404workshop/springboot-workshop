@@ -80,7 +80,13 @@ Spring Boot uses **Spring Profiles** to switch configurations cleanly without ed
    ```bash
    .\mvnw.cmd spring-boot:run -Dspring-boot.run.profiles=postgres
    ```
-   *(Ensure you created the `ecommerce_db` database in PostgreSQL).*
+   * **PostgreSQL Setup & Download:**
+     * Download and install [PostgreSQL Community Server](https://www.postgresql.org/download/).
+     * Create the database in psql or pgAdmin:
+       ```sql
+       CREATE DATABASE ecommerce_db;
+       ```
+     * Configure credentials in `src/main/resources/application-postgres.properties`.
 
 ### Running Tests (TDD & Component Verification)
 Run unit and integration tests using Maven:
