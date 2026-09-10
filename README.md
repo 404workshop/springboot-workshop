@@ -129,6 +129,34 @@ Spring Boot uses **Spring Profiles** to switch configurations cleanly without ed
        ```
      * Configure credentials in `src/main/resources/application-production.properties`.
 
+### How to Run with Profiles
+
+**1. Run Application with Profiles:**
+```bash
+# Default profile (H2 in-memory, no setup)
+.\mvnw.cmd spring-boot:run
+# OR explicitly:
+.\mvnw.cmd spring-boot:run -Dspring-boot.run.profiles=default
+
+# Production profile (PostgreSQL)
+.\mvnw.cmd spring-boot:run -Dspring-boot.run.profiles=production
+
+# Alternative: via environment variable (Linux/macOS)
+SPRING_PROFILES_ACTIVE=production .\mvnw.cmd spring-boot:run
+# Alternative: via environment variable (Windows PowerShell)
+$env:SPRING_PROFILES_ACTIVE="production"; .\mvnw.cmd spring-boot:run
+```
+
+**2. Run Tests with Profiles:**
+```bash
+# Default: tests run with H2 (fast, isolated)
+.\mvnw.cmd test
+
+# Run tests against PostgreSQL (requires running DB)
+.\mvnw.cmd test -Dspring.profiles.active=production
+```
+> For a single test class to always use a profile, annotate it: `@ActiveProfiles("production")` on the test class.
+
 ### Running Tests (TDD & Component Verification)
 Run unit and integration tests using Maven:
 ```bash
