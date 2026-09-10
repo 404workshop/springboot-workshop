@@ -37,18 +37,23 @@ Welcome to the **Convergence 2026** Spring Boot Masterclass hosted by **GDGC VNR
 
 ## 🚀 Getting Started & Prerequisites
 
-Before starting the workshop, ensure you have the following tools installed on your machine:
+Before starting the workshop, ensure you have the following modern tools installed:
 
-1. **Java Development Kit (JDK 17+)**: 
-   * Download [Eclipse Temurin JDK 17 (LTS)](https://adoptium.net/) or [Oracle JDK 17](https://www.oracle.com/java/technologies/downloads/#java17).
+1. **Java Development Kit (Oracle JDK 17+)**: 
+   * Download and install [Oracle JDK 17](https://www.oracle.com/java/technologies/downloads/#java17).
    * Verify installation: `java -version`
 2. **Apache Maven (3.8+)**: 
-   * Download and install from [Maven Official Site](https://maven.apache.org/download.cgi).
+   * Download from [Maven Official Site](https://maven.apache.org/download.cgi) or use your system package manager (`choco install maven` / `brew install maven`).
    * Verify installation: `mvn -version`
-3. **IDE (Recommended)**: 
-   * [IntelliJ IDEA Community Edition](https://www.jetbrains.com/idea/download/) (Free & excellent for Spring Boot).
+3. **Editor: Visual Studio Code**: 
+   * Download [VS Code](https://code.visualstudio.com/).
+   * When you open this project in VS Code, it will automatically prompt you to install the recommended **Extension Pack for Java** and **Spring Boot Extension Pack**.
+   * Essential Extensions:
+     * *Extension Pack for Java* (`vscjava.vscode-java-pack`)
+     * *Spring Boot Extension Pack* (`vmware.vscode-spring-boot`)
+     * *Maven for Java* (`vscjava.vscode-maven`)
 4. **API Testing Tool**: 
-   * [Postman Desktop App](https://www.postman.com/downloads/) (or use VS Code / curl).
+   * [Postman Desktop App](https://www.postman.com/downloads/) (or VS Code REST Client extension).
 
 ### Running the Application
 ```bash
