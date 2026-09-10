@@ -31,7 +31,9 @@ style: |
 
 `@RestController` → `@Service` → `JpaRepository` → **H2 / Postgres**
 
-![bg right:42% 90%](https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=800&auto=format&fit=crop)
+```
+  [ curl ] → [ DispatcherServlet ] → [ Controller ] → [ Service ] → [ JPA ] → [ H2 / Postgres ]
+```
 
 ---
 
