@@ -1,3 +1,11 @@
+---
+marp: true
+theme: gaia
+paginate: true
+header: "Convergence 2026 — Spring Boot Workshop"
+footer: "GDGC VNR VJIET · neilghosh/springboot-workshop"
+---
+
 # Convergence 2026: Spring Boot & Enterprise Architecture Masterclass
 
 **Event:** Convergence 2026, GDGC VNR VJIET  
