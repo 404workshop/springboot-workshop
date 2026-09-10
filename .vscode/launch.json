@@ -1,0 +1,14 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "java",
+      "name": "Debug Spring Boot App",
+      "request": "launch",
+      "mainClass": "com.convergence.ecommerce.EcommerceApplication",
+      "projectName": "ecommerce-api",
+      "args": "",
+      "env": {}
+    }
+  ]
+}
