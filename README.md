@@ -80,26 +80,52 @@ Spring Boot uses **Spring Profiles** to switch configurations cleanly without ed
    ```bash
    .\mvnw.cmd spring-boot:run -Dspring-boot.run.profiles=production
    ```
-   * **PostgreSQL Setup & Download (Windows):**
-     * **Command-line installation (Winget):**
-       ```powershell
-       winget install PostgreSQL.PostgreSQL.16
-       ```
-     * Or download manually from [PostgreSQL Official Site](https://www.postgresql.org/download/).
-     * Check if the PostgreSQL service is running (no admin required):
-       ```powershell
-       Get-Service -Name "*postgres*"
-       # OR in Command Prompt (cmd):
-       sc query postgresql-x64-16
-       ```
-     * Start or Restart the service (requires Administrator terminal):
-       ```powershell
-       # PowerShell as Administrator:
-       Start-Service postgresql-x64-16
-       # Command Prompt as Administrator:
-       net start postgresql-x64-16
-       # OR Windows GUI: Win + R -> services.msc -> postgresql-x64-16 -> Start/Restart
-       ```
+    * **PostgreSQL Setup & Service Management:**
+      * **Installation:**
+        ```powershell
+        # Windows (Winget):
+        winget install PostgreSQL.PostgreSQL.16
+        # Linux (Ubuntu/Debian):
+        sudo apt update && sudo apt install postgresql postgresql-contrib
+        # macOS (Homebrew):
+        brew install postgresql@16
+        ```
+        Or download manually from [PostgreSQL Official Site](https://www.postgresql.org/download/).
+      * **Check if service is running:**
+        ```powershell
+        # Windows PowerShell (no admin required):
+        Get-Service -Name "*postgres*"
+        # Windows CMD:
+        sc query postgresql-x64-16
+        # Linux (systemd):
+        systemctl status postgresql
+        # Linux (alternative):
+        pg_isready
+        # macOS:
+        brew services list | grep postgresql
+        ```
+      * **Start / Stop / Restart service:**
+        ```powershell
+        # Windows (requires Administrator terminal):
+        Start-Service postgresql-x64-16
+        Stop-Service postgresql-x64-16
+        Restart-Service postgresql-x64-16
+        # Windows CMD as Administrator:
+        net start postgresql-x64-16
+        net stop postgresql-x64-16
+        # Windows GUI: Win + R -> services.msc -> postgresql-x64-16 -> Start/Restart
+
+        # Linux:
+        sudo systemctl start postgresql
+        sudo systemctl stop postgresql
+        sudo systemctl restart postgresql
+        sudo systemctl enable postgresql  # auto-start on boot
+
+        # macOS:
+        brew services start postgresql@16
+        brew services stop postgresql@16
+        brew services restart postgresql@16
+        ```
      * **Fix `psql` path (Windows `psql` is not recognized by default):**
        * **Option A (Direct):** Use the absolute path:
          ```powershell
