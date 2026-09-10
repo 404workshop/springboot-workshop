@@ -35,33 +35,32 @@ Welcome to the **Convergence 2026** Spring Boot Masterclass hosted by **GDGC VNR
 
 ---
 
-## 🚀 Getting Started & Prerequisites
+## 🚀 Getting Started & Prerequisites (Terminal-First)
 
-Before starting the workshop, ensure you have the following modern tools installed:
+Before starting the workshop, ensure you have the bare minimum tools installed:
 
-1. **Java Development Kit (Oracle JDK 17+)**: 
+1. **Oracle JDK 17+**: 
    * Download and install [Oracle JDK 17](https://www.oracle.com/java/technologies/downloads/#java17).
    * Verify installation: `java -version`
 2. **Apache Maven (3.8+)**: 
-   * Download from [Maven Official Site](https://maven.apache.org/download.cgi) or use your system package manager (`choco install maven` / `brew install maven`).
+   * Download from [Maven Official Site](https://maven.apache.org/download.cgi).
    * Verify installation: `mvn -version`
-3. **Editor: Visual Studio Code**: 
-   * Download [VS Code](https://code.visualstudio.com/).
-   * When you open this project in VS Code, it will automatically prompt you to install the recommended **Extension Pack for Java** and **Spring Boot Extension Pack**.
-   * Essential Extensions:
-     * *Extension Pack for Java* (`vscjava.vscode-java-pack`)
-     * *Spring Boot Extension Pack* (`vmware.vscode-spring-boot`)
-     * *Maven for Java* (`vscjava.vscode-maven`)
+3. **Editor (VS Code / Any Text Editor)**: 
+   * Open the project folder in VS Code or your preferred terminal editor. No mandatory extensions required—just plain Java files and Maven.
 4. **API Testing Tool**: 
-   * [Postman Desktop App](https://www.postman.com/downloads/) (or VS Code REST Client extension).
+   * Postman or `curl`.
 
-### Running the Application
+### Running & Debugging from Terminal
+
 ```bash
-# Clone and navigate to project
+# Navigate to project root
 cd springboot-workshop
 
-# Run using Maven
+# 1. Run the application normally
 mvn spring-boot:run
+
+# 2. Run with remote debugging enabled (Suspended on startup on port 5005)
+mvn spring-boot:run -Dspring-boot.run.jvmArguments="-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=5005"
 ```
 
 The application will start on port `8080`. By default, it uses an in-memory **H2 Database** with the H2 Console available at:
