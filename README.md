@@ -70,21 +70,23 @@ mvn spring-boot:run -Dspring-boot.run.jvmArguments="-agentlib:jdwp=transport=dt_
 The application will start on port `8080`. By default, it uses an in-memory **H2 Database** with the H2 Console available at:
 `http://localhost:8080/h2-console` (JDBC URL: `jdbc:h2:mem:ecommercedb`, Username: `sa`, Password: ``).
 
-### Switching to PostgreSQL (Optional)
-To use a persistent local PostgreSQL database instead of H2:
-1. Create a database named `ecommerce_db` in PostgreSQL:
-   ```sql
-   CREATE DATABASE ecommerce_db;
+### Database Selection & Spring Profiles (In-Memory vs PostgreSQL)
+Spring Boot uses **Spring Profiles** to switch configurations cleanly without editing files:
+1. **Default Profile (H2 In-Memory DB)**: Used automatically for zero-friction student live coding and fast unit/integration tests.
+   ```bash
+   .\mvnw.cmd spring-boot:run
    ```
-2. Open `src/main/resources/application.properties` and comment out the H2 settings while uncommenting the PostgreSQL configuration:
-   ```properties
-   spring.datasource.url=jdbc:postgresql://localhost:5432/ecommerce_db
-   spring.datasource.username=postgres
-   spring.datasource.password=your_password
-   spring.datasource.driver-class-name=org.postgresql.Driver
-   
-   spring.jpa.database-platform=org.hibernate.dialect.PostgreSQLDialect
+2. **PostgreSQL Profile**: Activate the `postgres` profile to use PostgreSQL for production/persistence:
+   ```bash
+   .\mvnw.cmd spring-boot:run -Dspring-boot.run.profiles=postgres
    ```
+   *(Ensure you created the `ecommerce_db` database in PostgreSQL).*
+
+### Running Tests (TDD & Component Verification)
+Run unit and integration tests using Maven:
+```bash
+.\mvnw.cmd test
+```
 
 ---
 
