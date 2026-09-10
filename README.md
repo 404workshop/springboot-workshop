@@ -127,7 +127,20 @@ Spring Boot uses **Spring Profiles** to switch configurations cleanly without ed
        -- View table data
        SELECT * FROM products;
        ```
-     * Configure credentials in `src/main/resources/application-production.properties`.
+      * **Best Practice: Externalize credentials (never hardcode secrets):**
+        `application-production.properties` uses environment variables:
+        ```properties
+        spring.datasource.url=${POSTGRES_URL:jdbc:postgresql://localhost:5432/ecommerce_db}
+        spring.datasource.username=${POSTGRES_USER:postgres}
+        spring.datasource.password=${POSTGRES_PASSWORD:secret}
+        ```
+        Set them via `.env` file (see `.env.example`) or shell:
+        ```powershell
+        # Windows PowerShell
+        $env:POSTGRES_PASSWORD="mySecret"; $env:SPRING_PROFILES_ACTIVE="production"; .\mvnw.cmd spring-boot:run
+        # Linux/macOS
+        POSTGRES_PASSWORD=mySecret SPRING_PROFILES_ACTIVE=production ./mvnw spring-boot:run
+        ```
 
 ### How to Run with Profiles
 
