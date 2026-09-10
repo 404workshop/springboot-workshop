@@ -128,7 +128,7 @@ Import the included Postman collection to test all API endpoints:
 | `PUT` | `/api/products/{id}` | Update an existing product |
 | `DELETE` | `/api/products/{id}` | Delete a product by ID |
 
-#### cURL Examples
+#### cURL Examples (Bash / Linux / macOS)
 
 1. **Create Product (POST)**
    ```bash
@@ -157,4 +157,32 @@ Import the included Postman collection to test all API endpoints:
 5. **Delete Product (DELETE)**
    ```bash
    curl -X DELETE http://localhost:8080/api/products/1
+   ```
+
+#### PowerShell Examples (Windows PowerShell)
+*(Note: Use `curl.exe` instead of `curl` since `curl` is an alias for `Invoke-WebRequest`, and keep commands on a single line).*
+
+1. **Create Product (POST)**
+   ```powershell
+   curl.exe -X POST http://localhost:8080/api/products -H "Content-Type: application/json" -d '{"name": "Mechanical Keyboard", "description": "RGB Wireless", "price": 79.99, "stockQuantity": 50, "category": "Electronics"}'
+   ```
+
+2. **Get All Products (GET)**
+   ```powershell
+   curl.exe http://localhost:8080/api/products
+   ```
+
+3. **Get Product by ID (GET)**
+   ```powershell
+   curl.exe http://localhost:8080/api/products/1
+   ```
+
+4. **Update Product (PUT)**
+   ```powershell
+   curl.exe -X PUT http://localhost:8080/api/products/1 -H "Content-Type: application/json" -d '{"name": "Updated Keyboard", "description": "RGB Wireless", "price": 89.99, "stockQuantity": 40, "category": "Electronics"}'
+   ```
+
+5. **Delete Product (DELETE)**
+   ```powershell
+   curl.exe -X DELETE http://localhost:8080/api/products/1
    ```
