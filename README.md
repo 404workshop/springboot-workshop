@@ -100,7 +100,8 @@ Follow along during the live coding session by switching branches:
 Import the included Postman collection to test all API endpoints:
 * **File Location:** `postman/Convergence-2026-ECommerce-API.postman_collection.json`
 
-### Endpoints Summary
+### Endpoints Summary & cURL Commands
+
 | Method | Endpoint | Description |
 |---|---|---|
 | `GET` | `/api/products` | Retrieve all products |
@@ -108,3 +109,34 @@ Import the included Postman collection to test all API endpoints:
 | `POST` | `/api/products` | Create a new product (with validation) |
 | `PUT` | `/api/products/{id}` | Update an existing product |
 | `DELETE` | `/api/products/{id}` | Delete a product by ID |
+
+#### cURL Examples
+
+1. **Create Product (POST)**
+   ```bash
+   curl -X POST http://localhost:8080/api/products \
+     -H "Content-Type: application/json" \
+     -d '{"name": "Mechanical Keyboard", "description": "RGB Wireless", "price": 79.99, "stockQuantity": 50, "category": "Electronics"}'
+   ```
+
+2. **Get All Products (GET)**
+   ```bash
+   curl http://localhost:8080/api/products
+   ```
+
+3. **Get Product by ID (GET)**
+   ```bash
+   curl http://localhost:8080/api/products/1
+   ```
+
+4. **Update Product (PUT)**
+   ```bash
+   curl -X PUT http://localhost:8080/api/products/1 \
+     -H "Content-Type: application/json" \
+     -d '{"name": "Updated Keyboard", "description": "RGB Wireless", "price": 89.99, "stockQuantity": 40, "category": "Electronics"}'
+   ```
+
+5. **Delete Product (DELETE)**
+   ```bash
+   curl -X DELETE http://localhost:8080/api/products/1
+   ```
