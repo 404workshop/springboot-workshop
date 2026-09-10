@@ -10,9 +10,9 @@
 | Block | Duration | Content |
 |-------|----------|---------|
 | Registration & Setup | 10 min | Clone repo, verify JDK 17 & run default profile (`curl []`) |
-| Concepts Before Code | 40 min | `PRESENTATION.md` — Spring Boot features, IoC/DI deep dive, profiles — **expanded** |
-| Hands-on Live Coding | 110 min | Follow git branches `step-0` → `step-3` (pace unchanged) |
-| Q&A & Wrap-up | 20 min | Profiles, `curl`, Postgres, debugging |
+| Concepts Before Code | 45 min | `PRESENTATION.md` — why Spring Boot vs Node/Python/Go, why code in agent era, Boot features, IoC/DI — **expanded** |
+| Hands-on Live Coding | 105 min | Follow git branches `step-0` → `step-3` (pace unchanged, checkpoints trimmed 5 min) |
+| Q&A & Wrap-up | 20 min | Profiles, `curl`, Postgres, debug + agent-generated code review |
 
 **Live-coding branches — checkout to follow along:**
 ```bash
