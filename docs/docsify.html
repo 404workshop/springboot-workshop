@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Convergence 2026 — Spring Boot Workshop (MD Mirror)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify@4/lib/themes/vue.css">
+  <style>
+    /* keep it close to repo MD + ASCII readable */
+    .markdown-section pre { background: #f8f8f8; border-radius: 6px; }
+    .markdown-section pre code { font-size: 0.88em; }
+    .markdown-section table { font-size: 0.92em; }
+    .app-name-link { color: #0288d1 !important; }
+  </style>
+</head>
+<body>
+  <div id="app">Loading workshop deck…</div>
+  <script>
+    window.$docsify = {
+      name: 'springboot-workshop',
+      repo: 'neilghosh/springboot-workshop',
+      homepage: '../PRESENTATION.md',
+      loadSidebar: false,
+      auto2top: true,
+      search: { placeholder: 'Search deck…', noData: 'No results' },
+      copyCode: { buttonText: 'Copy', successText: 'Copied' },
+      relativePath: true,
+    }
+  </script>
+  <script src="//cdn.jsdelivr.net/npm/docsify@4/lib/docsify.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/docsify@4/lib/plugins/search.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/docsify@4/lib/plugins/zoom-image.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/docsify-copy-code@2/dist/docsify-copy-code.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/prismjs@1/components/prism-java.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/prismjs@1/components/prism-bash.min.js"></script>
+</body>
+</html>
