@@ -1,333 +1,312 @@
-# Convergence 2026: Spring Boot 3 E-Commerce API Workshop
+# Convergence 2026 — Spring Boot 3 E-Commerce API Workshop
 
-Welcome to the **Convergence 2026** Spring Boot Masterclass hosted by **GDGC VNR VJIET**. This repository contains the complete slide deck, step-by-step hands-on checkpoints, and production-grade source code for building a robust E-Commerce REST API.
-
----
-
-## ⏱️ Workshop Schedule (3 Hours)
-* **Registration & Setup:** 15 min
-* **Intro & Architecture Presentation:** 30 min (`PRESENTATION.md`)
-* **Hands-on Live Coding (CRUD, Services, DB):** 2 hours
-* **Q&A & Wrap-up:** 15 min
+> **Host:** GDGC VNR VJIET · **Format:** 3 Hours · **Level:** 2nd–4th Year Engineering Students  
+> Build a production-grade E-Commerce REST API from scratch: REST → Validation → Service → JPA → PostgreSQL/H2
 
 ---
 
-## 🏛️ Architecture Overview
+## ⏱️ Workshop Flow (3 Hours)
+
+| Block | Duration | Content |
+|-------|----------|---------|
+| Registration & Setup | 15 min | Clone repo, verify JDK 17 & run default profile |
+| Architecture Talk | 30 min | `PRESENTATION.md` — IoC/DI, DispatcherServlet lifecycle, layered architecture |
+| Hands-on Live Coding | 2 hours | Follow git branches `step-0` → `step-3` |
+| Q&A & Wrap-up | 15 min | Postman demo, profiles, Q&A |
+
+**Live-coding branches — checkout to follow along:**
+```bash
+git checkout step-0-starter   # Starter: Maven, application.properties
+git checkout step-1-rest-dto  # REST + DTOs + @Valid
+git checkout step-2-service-db # JPA Entity + Repository + Service + H2/Postgres
+git checkout step-3-complete  # Global exception handling + tests + profiles
+```
+
+---
+
+## 🏛️ Architecture at a Glance
 
 ```text
-[ Client (Postman / Frontend) ]
-              │
-              ▼  HTTP Request (JSON)
-[ DispatcherServlet (Front Controller) ]
-              │
+[ Postman / curl / Frontend ]
+              │  JSON
               ▼
-[ ProductController (@RestController) ] ── (DTO Validation)
-              │
-              ▼
-[ ProductService (@Service) ] ────────── (Business Logic & Transactions)
-              │
-              ▼
-[ ProductRepository (Spring Data JPA) ] ── (ORM / Hibernate)
-              │
-              ▼
-[ PostgreSQL / H2 In-Memory DB ]
+[ DispatcherServlet ] → [ ProductController @RestController ] → DTO Validation
+                              │
+                              ▼
+                    [ ProductService @Service ]  ← @Transactional
+                              │
+                              ▼
+              [ ProductRepository JpaRepository ] → Hibernate → [ H2 (default) | PostgreSQL (production) ]
 ```
+
+Full diagrams & talk notes: [`PRESENTATION.md`](./PRESENTATION.md)
 
 ---
 
-## 🚀 Getting Started & Prerequisites (Terminal-First)
-
-Before starting the workshop, ensure you have the bare minimum tools installed:
-
-1. **Oracle JDK 17+**: 
-   * Download and install [Oracle JDK 17](https://www.oracle.com/java/technologies/downloads/#java17).
-   * Verify installation: `java -version`
-2. **Apache Maven (3.8+)**: 
-   * Download from [Maven Official Site](https://maven.apache.org/download.cgi).
-   * Verify installation: `mvn -version`
-3. **Editor (VS Code / Any Text Editor)**: 
-   * Open the project folder in VS Code or your preferred terminal editor. No mandatory extensions required—just plain Java files and Maven.
-4. **API Testing Tool**: 
-   * Postman or `curl`.
-
-### Running & Debugging from Terminal
-
-You can use either installed Maven (`mvn`) or the included Maven Wrapper (`mvnw` / `mvnw.cmd`):
+## 🚀 Quick Start (5 min — For Students Who Want to Run Now)
 
 ```bash
-# Navigate to project root
+# 1. Clone
+git clone <your-github-url> springboot-workshop
 cd springboot-workshop
 
-# 1. Run the application normally (using Maven or Maven Wrapper)
-mvn spring-boot:run
-# OR on Windows without installing Maven:
-.\mvnw.cmd spring-boot:run
+# 2. Verify Java 17 (required — Spring Boot 3 needs JDK 17+)
+java -version
+# → openjdk 17.x  or Oracle JDK 17.x
 
-# 2. Run with remote debugging enabled (Suspended on startup on port 5005)
-mvn spring-boot:run -Dspring-boot.run.jvmArguments="-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=5005"
+# 3. Run — zero setup, uses H2 in-memory DB
+.\mvnw.cmd spring-boot:run
+# Linux/macOS: ./mvnw spring-boot:run
+
+# 4. Test
+curl http://localhost:8080/api/products
+# → []   (empty list — H2 ready)
+# H2 Console: http://localhost:8080/h2-console  (JDBC URL: jdbc:h2:mem:ecommercedb, User: sa)
 ```
 
-The application will start on port `8080`. By default, it uses an in-memory **H2 Database** with the H2 Console available at:
-`http://localhost:8080/h2-console` (JDBC URL: `jdbc:h2:mem:ecommercedb`, Username: `sa`, Password: ``).
+> No Maven install needed — `mvnw`/`mvnw.cmd` auto-downloads Maven 3.9.6 on first run.
 
-### Database Selection & Spring Profiles (In-Memory vs PostgreSQL)
-Spring Boot uses **Spring Profiles** to switch configurations cleanly without editing files:
-1. **Default Profile (H2 In-Memory DB)**: Used automatically for zero-friction student live coding and fast unit/integration tests.
-   ```bash
-   .\mvnw.cmd spring-boot:run
-   ```
-2. **Production Profile (PostgreSQL)**: Activate the `production` profile to use PostgreSQL for production/persistence:
-   ```bash
-   .\mvnw.cmd spring-boot:run -Dspring-boot.run.profiles=production
-   ```
-    * **PostgreSQL Setup & Service Management:**
-      * **Installation:**
-        ```powershell
-        # Windows (Winget):
-        winget install PostgreSQL.PostgreSQL.16
-        # Linux (Ubuntu/Debian):
-        sudo apt update && sudo apt install postgresql postgresql-contrib
-        # macOS (Homebrew):
-        brew install postgresql@16
-        ```
-        Or download manually from [PostgreSQL Official Site](https://www.postgresql.org/download/).
-      * **Check if service is running:**
-        ```powershell
-        # Windows PowerShell (no admin required):
-        Get-Service -Name "*postgres*"
-        # Windows CMD:
-        sc query postgresql-x64-16
-        # Linux (systemd):
-        systemctl status postgresql
-        # Linux (alternative):
-        pg_isready
-        # macOS:
-        brew services list | grep postgresql
-        ```
-      * **Start / Stop / Restart service:**
-        ```powershell
-        # Windows (requires Administrator terminal):
-        Start-Service postgresql-x64-16
-        Stop-Service postgresql-x64-16
-        Restart-Service postgresql-x64-16
-        # Windows CMD as Administrator:
-        net start postgresql-x64-16
-        net stop postgresql-x64-16
-        # Windows GUI: Win + R -> services.msc -> postgresql-x64-16 -> Start/Restart
+---
 
-        # Linux:
-        sudo systemctl start postgresql
-        sudo systemctl stop postgresql
-        sudo systemctl restart postgresql
-        sudo systemctl enable postgresql  # auto-start on boot
+## 📋 Prerequisites
 
-        # macOS:
-        brew services start postgresql@16
-        brew services stop postgresql@16
-        brew services restart postgresql@16
-        ```
-     * **Fix `psql` path (Windows `psql` is not recognized by default):**
-       * **Option A (Direct):** Use the absolute path:
-         ```powershell
-         & "C:\Program Files\PostgreSQL\16\bin\psql.exe" -U postgres -c "CREATE DATABASE ecommerce_db;"
-         ```
-       * **Option B (Permanent fix):** Add PostgreSQL to your PATH env variable as Administrator:
-         ```powershell
-         [Environment]::SetEnvironmentVariable("PATH", $env:PATH + ";C:\Program Files\PostgreSQL\16\bin", [EnvironmentVariableTarget]::Machine)
-         # Restart your terminal after this, and psql will work globally!
-         ```
-     * Create and inspect databases/tables via `psql`:
-       ```sql
-       -- Create workshop database (once)
-       CREATE DATABASE ecommerce_db;
-       
-       -- List all databases
-       \l
-       
-       -- Connect to the workshop database
-       \c ecommerce_db
-       
-       -- List all tables (after the app runs once)
-       \dt
-       
-       -- View table data
-       SELECT * FROM products;
-       ```
-      * **Best Practice: Externalize credentials (never hardcode secrets):**
-        `application-production.properties` uses environment variables:
-        ```properties
-        spring.datasource.url=${POSTGRES_URL:jdbc:postgresql://localhost:5432/ecommerce_db}
-        spring.datasource.username=${POSTGRES_USER:postgres}
-        spring.datasource.password=${POSTGRES_PASSWORD:secret}
-        ```
-        Set them via `.env` file (see `.env.example` - auto-loaded via `spring.config.import=optional:file:.env[.properties]`) or shell:
-        ```powershell
-        # Windows PowerShell - load .env manually if needed:
-        Get-Content .env | ForEach-Object { if ($_ -match "^\s*([^#][^=]+)=(.*)$") { Set-Item -Path Env:$($matches[1]) -Value $matches[2].Trim() } }
-        # Or set directly:
-        $env:POSTGRES_PASSWORD="mySecret"; $env:SPRING_PROFILES_ACTIVE="production"; .\mvnw.cmd spring-boot:run
-        # Linux/macOS
-        set -a; source .env; set +a; ./mvnw spring-boot:run
-        # Or: POSTGRES_PASSWORD=mySecret SPRING_PROFILES_ACTIVE=production ./mvnw spring-boot:run
-        ```
+| Tool | Version | Install | Verify |
+|------|---------|---------|--------|
+| **Oracle JDK 17+** | 17 LTS | [Oracle JDK 17](https://www.oracle.com/java/technologies/downloads/#java17) or `winget install Oracle.JDK.17` | `java -version` |
+| **Maven** | 3.8+ *or* use wrapper | [Maven](https://maven.apache.org/download.cgi) or just use `.\mvnw.cmd` | `mvn -version` or `.\mvnw.cmd --version` |
+| **VS Code** | Latest | [VS Code](https://code.visualstudio.com/) | — |
+| **PostgreSQL** *(optional, for production profile)* | 16 | [PostgreSQL](https://www.postgresql.org/download/) or `winget install PostgreSQL.PostgreSQL.16` | `psql --version` |
+| **Postman / curl** | — | [Postman](https://www.postman.com/downloads/) | `curl --version` |
 
-### How to Run with Profiles
+**Debugging in VS Code:** Press `F5` → *Debug Spring Boot App* (config in `.vscode/launch.json`). Breakpoints in `ProductController` / `ProductService` will be hit on next Postman/curl request.
 
-**1. Run Application with Profiles:**
+---
+
+## ▶️ Running the Application
+
+### A. Default Profile — H2 In-Memory (Workshop Default)
+No database setup. Data resets on restart — ideal for live coding & tests.
 ```bash
-# Default profile (H2 in-memory, no setup)
-.\mvnw.cmd spring-boot:run
-# OR explicitly (PowerShell requires quotes):
+.\mvnw.cmd spring-boot:run                          # H2 auto
 .\mvnw.cmd spring-boot:run "-Dspring-boot.run.profiles=default"
+# env alternative
+$env:SPRING_PROFILES_ACTIVE="default"; .\mvnw.cmd spring-boot:run  # PowerShell
+SPRING_PROFILES_ACTIVE=default ./mvnw spring-boot:run              # Linux/macOS
+```
 
-# Production profile (PostgreSQL) - PowerShell requires quotes around -D
+### B. Production Profile — PostgreSQL (Persistent)
+```bash
+# 1. Create DB once
+psql -U postgres -c "CREATE DATABASE ecommerce_db;"
+# Windows if psql not in PATH: & "C:\Program Files\PostgreSQL\16\bin\psql.exe" -U postgres -c "CREATE DATABASE ecommerce_db;"
+
+# 2. Set credentials (see .env.example — auto-loaded via spring.config.import=optional:file:.env[.properties])
+# Edit .env: POSTGRES_PASSWORD=your_real_password
 .\mvnw.cmd spring-boot:run "-Dspring-boot.run.profiles=production"
-
-# Alternative: via environment variable (Linux/macOS)
-SPRING_PROFILES_ACTIVE=production ./mvnw spring-boot:run
-# Alternative: via environment variable (Windows PowerShell)
+# env alternative (no quoting needed)
 $env:SPRING_PROFILES_ACTIVE="production"; .\mvnw.cmd spring-boot:run
 ```
 
-**2. Run Tests with Profiles:**
+`application-production.properties` externalizes credentials:
+```properties
+spring.datasource.url=${POSTGRES_URL:jdbc:postgresql://localhost:5432/ecommerce_db}
+spring.datasource.username=${POSTGRES_USER:postgres}
+spring.datasource.password=${POSTGRES_PASSWORD:secret}
+```
+
+### C. Remote Debugging
 ```bash
-# Default: tests run with H2 (fast, isolated)
+.\mvnw.cmd spring-boot:run "-Dspring-boot.run.jvmArguments=-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=5005"
+# Attach VS Code debugger to port 5005
+```
+
+---
+
+## 🔧 Build & Test (TDD)
+
+```bash
+# Unit + integration tests (H2, fast)
 .\mvnw.cmd test
 
-# Run tests against PostgreSQL (requires running DB) - PowerShell requires quotes
+# Tests against PostgreSQL (requires running DB)
 .\mvnw.cmd test "-Dspring.profiles.active=production"
-```
 
-**Troubleshooting Production Profile:**
-* `FATAL: password authentication failed for user "postgres"` → Your local PostgreSQL password is not `secret`. Set the real password:
-  ```powershell
-  $env:POSTGRES_PASSWORD="your_real_password"; .\mvnw.cmd spring-boot:run "-Dspring-boot.run.profiles=production"
-  ```
-  Or update `.env` and load it: `$env:POSTGRES_PASSWORD = (Get-Content .env | Select-String POSTGRES_PASSWORD).ToString().Split("=")[1]`
-> For a single test class to always use a profile, annotate it: `@ActiveProfiles("production")` on the test class.
-
-### Running Tests (TDD & Component Verification)
-Run unit and integration tests using Maven:
-```bash
-.\mvnw.cmd test
+# Single test class always on production profile: add @ActiveProfiles("production") on the class
 ```
+Test classes: `ProductServiceTest` (Mockito unit) + `ProductControllerIntegrationTest` (MockMvc + H2).
 
 ### Clean Build Commands
 ```bash
-# Remove previous build artifacts
-.\mvnw.cmd clean
-
-# Clean + compile sources
-.\mvnw.cmd clean compile
-
-# Clean + run tests
-.\mvnw.cmd clean test
-# With production profile (PowerShell: quotes required)
-.\mvnw.cmd clean test "-Dspring.profiles.active=production"
-
-# Clean + package executable JAR (skips tests if needed)
-.\mvnw.cmd clean package
+.\mvnw.cmd clean                     # remove target/
+.\mvnw.cmd clean compile             # clean + compile
+.\mvnw.cmd clean test                # clean + tests
+.\mvnw.cmd clean package             # executable JAR in target/*.jar
 .\mvnw.cmd clean package "-DskipTests"
-
-# Clean + install to local Maven repo
-.\mvnw.cmd clean install
+.\mvnw.cmd clean install             # install to local ~/.m2
 ```
 
 ---
 
-## 🌿 Step-by-Step Checkpoints (Git Branches)
+## 📬 API Reference & Testing
 
-Follow along during the live coding session by switching branches:
+**Postman:** Import `postman/Convergence-2026-ECommerce-API.postman_collection.json`
 
-* **`step-0-starter`**: Initial project setup, dependencies, and configuration.
-  ```bash
-  git checkout step-0-starter
-  ```
-* **`step-1-rest-dto`**: REST controllers, DTO request/response records, and Jakarta Bean Validation.
-  ```bash
-  git checkout step-1-rest-dto
-  ```
-* **`step-2-service-db`**: JPA Entities, Spring Data Repositories, Service layer, and database integration.
-  ```bash
-  git checkout step-2-service-db
-  ```
-* **`step-3-complete`**: Global Exception Handling, polished error responses, and complete CRUD implementation.
-  ```bash
-  git checkout step-3-complete
-  ```
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET` | `/api/products` | List all products |
+| `GET` | `/api/products/{id}` | Get by ID |
+| `POST` | `/api/products` | Create (validates `@NotBlank`, `@Positive`) |
+| `PUT` | `/api/products/{id}` | Update |
+| `DELETE` | `/api/products/{id}` | Delete |
+
+### cURL — Bash / Linux / macOS
+```bash
+curl -X POST http://localhost:8080/api/products -H "Content-Type: application/json" -d '{"name":"Mechanical Keyboard","description":"RGB Wireless","price":79.99,"stockQuantity":50,"category":"Electronics"}'
+curl http://localhost:8080/api/products
+curl http://localhost:8080/api/products/1
+curl -X PUT http://localhost:8080/api/products/1 -H "Content-Type: application/json" -d '{"name":"Updated Keyboard","description":"RGB Wireless","price":89.99,"stockQuantity":40,"category":"Electronics"}'
+curl -X DELETE http://localhost:8080/api/products/1
+```
+
+### cURL — Windows PowerShell
+Use `curl.exe` (bare `curl` is an alias for `Invoke-WebRequest`):
+```powershell
+curl.exe -X POST http://localhost:8080/api/products -H "Content-Type: application/json" -d '{"name": "Mechanical Keyboard", "description": "RGB Wireless", "price": 79.99, "stockQuantity": 50, "category": "Electronics"}'
+curl.exe http://localhost:8080/api/products
+curl.exe http://localhost:8080/api/products/1
+curl.exe -X PUT http://localhost:8080/api/products/1 -H "Content-Type: application/json" -d '{"name": "Updated Keyboard", "description": "RGB Wireless", "price": 89.99, "stockQuantity": 40, "category": "Electronics"}'
+curl.exe -X DELETE http://localhost:8080/api/products/1
+```
 
 ---
 
-## 📬 Postman Collection
+## 🐘 PostgreSQL Essentials (When You Need It)
 
-Import the included Postman collection to test all API endpoints:
-* **File Location:** `postman/Convergence-2026-ECommerce-API.postman_collection.json`
+**Install:**
+```powershell
+winget install PostgreSQL.PostgreSQL.16          # Windows
+sudo apt update && sudo apt install postgresql postgresql-contrib  # Ubuntu/Debian
+brew install postgresql@16                        # macOS
+```
 
-### Endpoints Summary & cURL Commands
+**psql usage:**
+```sql
+CREATE DATABASE ecommerce_db;  -- once
+\l                             -- list databases
+\c ecommerce_db                 -- connect
+\dt                            -- list tables (after app has run)
+SELECT * FROM products;
+```
 
-| Method | Endpoint | Description |
-|---|---|---|
-| `GET` | `/api/products` | Retrieve all products |
-| `GET` | `/api/products/{id}` | Retrieve product by ID |
-| `POST` | `/api/products` | Create a new product (with validation) |
-| `PUT` | `/api/products/{id}` | Update an existing product |
-| `DELETE` | `/api/products/{id}` | Delete a product by ID |
+See *Troubleshooting* below for service status, `psql` PATH fix, and password help.
 
-#### cURL Examples (Bash / Linux / macOS)
+---
 
-1. **Create Product (POST)**
-   ```bash
-   curl -X POST http://localhost:8080/api/products \
-     -H "Content-Type: application/json" \
-     -d '{"name": "Mechanical Keyboard", "description": "RGB Wireless", "price": 79.99, "stockQuantity": 50, "category": "Electronics"}'
-   ```
+## 🆘 Troubleshooting (Appendix — Read Only If Stuck)
 
-2. **Get All Products (GET)**
-   ```bash
-   curl http://localhost:8080/api/products
-   ```
+<details>
+<summary><b>PowerShell: Unknown lifecycle phase .run.profiles=production</b></summary>
 
-3. **Get Product by ID (GET)**
-   ```bash
-   curl http://localhost:8080/api/products/1
-   ```
+PowerShell parses `-D` as a parameter. **Quote it:**
+```powershell
+.\mvnw.cmd spring-boot:run "-Dspring-boot.run.profiles=production"
+.\mvnw.cmd test "-Dspring.profiles.active=production"
+```
+Or avoid quoting by using env vars: `$env:SPRING_PROFILES_ACTIVE="production"; .\mvnw.cmd spring-boot:run`
+</details>
 
-4. **Update Product (PUT)**
-   ```bash
-   curl -X PUT http://localhost:8080/api/products/1 \
-     -H "Content-Type: application/json" \
-     -d '{"name": "Updated Keyboard", "description": "RGB Wireless", "price": 89.99, "stockQuantity": 40, "category": "Electronics"}'
-   ```
+<details>
+<summary><b>FATAL: password authentication failed for user "postgres"</b></summary>
 
-5. **Delete Product (DELETE)**
-   ```bash
-   curl -X DELETE http://localhost:8080/api/products/1
-   ```
+Your local Postgres password ≠ `secret` (the `.env.example` default). Update `.env`:
+```ini
+POSTGRES_PASSWORD=your_real_password
+```
+Then rerun. Or:
+```powershell
+$env:POSTGRES_PASSWORD="your_real_password"; .\mvnw.cmd spring-boot:run "-Dspring-boot.run.profiles=production"
+```
+To reset Postgres password: `psql -U postgres -c "ALTER USER postgres PASSWORD 'secret';"`
+</details>
 
-#### PowerShell Examples (Windows PowerShell)
-*(Note: Use `curl.exe` instead of `curl` since `curl` is an alias for `Invoke-WebRequest`, and keep commands on a single line).*
+<details>
+<summary><b>psql is not recognized (Windows)</b></summary>
 
-1. **Create Product (POST)**
-   ```powershell
-   curl.exe -X POST http://localhost:8080/api/products -H "Content-Type: application/json" -d '{"name": "Mechanical Keyboard", "description": "RGB Wireless", "price": 79.99, "stockQuantity": 50, "category": "Electronics"}'
-   ```
+Installer doesn't add to PATH. Use absolute path:
+```powershell
+& "C:\Program Files\PostgreSQL\16\bin\psql.exe" -U postgres -c "CREATE DATABASE ecommerce_db;"
+```
+Or add permanently (Admin PowerShell, then restart terminal):
+```powershell
+[Environment]::SetEnvironmentVariable("PATH", $env:PATH + ";C:\Program Files\PostgreSQL\16\bin", [EnvironmentVariableTarget]::Machine)
+```
+</details>
 
-2. **Get All Products (GET)**
-   ```powershell
-   curl.exe http://localhost:8080/api/products
-   ```
+<details>
+<summary><b>Service start: Access is denied / System error 5</b></summary>
 
-3. **Get Product by ID (GET)**
-   ```powershell
-   curl.exe http://localhost:8080/api/products/1
-   ```
+Starting services needs Admin. Run PowerShell **as Administrator**:
+```powershell
+Start-Service postgresql-x64-16
+# or CMD Admin: net start postgresql-x64-16
+# or GUI: Win+R → services.msc → postgresql-x64-16 → Start
+```
+Check status (no admin needed):
+```powershell
+Get-Service -Name "*postgres*"          # PowerShell
+sc query postgresql-x64-16             # CMD
+systemctl status postgresql            # Linux
+pg_isready                             # Linux alt
+brew services list | grep postgresql   # macOS
+```
+Start on other OS:
+```bash
+sudo systemctl start postgresql            # Linux
+sudo systemctl enable postgresql           # auto-start on boot
+brew services start postgresql@16          # macOS
+```
+</details>
 
-4. **Update Product (PUT)**
-   ```powershell
-   curl.exe -X PUT http://localhost:8080/api/products/1 -H "Content-Type: application/json" -d '{"name": "Updated Keyboard", "description": "RGB Wireless", "price": 89.99, "stockQuantity": 40, "category": "Electronics"}'
-   ```
+<details>
+<summary><b>The JAVA_HOME environment variable is not defined correctly / release version 17 not supported</b></summary>
 
-5. **Delete Product (DELETE)**
-   ```powershell
-   curl.exe -X DELETE http://localhost:8080/api/products/1
-   ```
+Spring Boot 3 requires JDK 17+. You have JDK 16 active. Set `JAVA_HOME` to JDK 17:
+```powershell
+[Environment]::SetEnvironmentVariable("JAVA_HOME", "C:\Program Files\Java\jdk-17.0.20", [EnvironmentVariableTarget]::Machine)
+# Then restart terminal; verify:
+java -version
+$env:JAVA_HOME="C:\Program Files\Java\jdk-17.0.20"; $env:PATH="$env:JAVA_HOME\bin;$env:PATH"; java -version
+```
+`.\mvnw.cmd` respects `JAVA_HOME` — no Maven reinstall needed.
+</details>
+
+<details>
+<summary><b>winget install Apache.Maven didn't work</b></summary>
+
+Use the wrapper instead — no install needed: `.\mvnw.cmd --version` (auto-downloads Maven 3.9.6).  
+Or install manually from [maven.apache.org/download.cgi](https://maven.apache.org/download.cgi) and add `bin` to PATH.
+</details>
+
+<details>
+<summary><b>Port 8080 already in use</b></summary>
+
+```powershell
+# Find and kill
+netstat -ano | findstr :8080
+taskkill /PID <pid> /F
+# Or run on different port:
+.\mvnw.cmd spring-boot:run "-Dspring-boot.run.arguments=--server.port=8081"
+```
+</details>
+
+<details>
+<summary><b>.env not loading</b></summary>
+
+This project auto-loads `.env` via `spring.config.import=optional:file:.env[.properties]` in `application.properties:2`.  
+If you still need manual load:
+```powershell
+Get-Content .env | ForEach-Object { if ($_ -match "^\s*([^#][^=]+)=(.*)$") { Set-Item -Path Env:$($matches[1]) -Value $matches[2].Trim() } }
+# Linux/macOS:
+set -a; source .env; set +a
+```
+</details>
