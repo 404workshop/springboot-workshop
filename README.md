@@ -9,10 +9,10 @@
 
 | Block | Duration | Content |
 |-------|----------|---------|
-| Registration & Setup | 15 min | Clone repo, verify JDK 17 & run default profile |
-| Architecture Talk | 30 min | `PRESENTATION.md` — IoC/DI, DispatcherServlet lifecycle, layered architecture |
-| Hands-on Live Coding | 2 hours | Follow git branches `step-0` → `step-3` |
-| Q&A & Wrap-up | 15 min | Postman demo, profiles, Q&A |
+| Registration & Setup | 10 min | Clone repo, verify JDK 17 & run default profile (`curl []`) |
+| Concepts Before Code | 40 min | `PRESENTATION.md` — Spring Boot features, IoC/DI deep dive, profiles — **expanded** |
+| Hands-on Live Coding | 110 min | Follow git branches `step-0` → `step-3` (pace unchanged) |
+| Q&A & Wrap-up | 20 min | Profiles, `curl`, Postgres, debugging |
 
 **Live-coding branches — checkout to follow along:**
 ```bash
