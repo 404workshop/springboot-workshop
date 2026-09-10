@@ -37,9 +37,18 @@ Welcome to the **Convergence 2026** Spring Boot Masterclass hosted by **GDGC VNR
 
 ## 🚀 Getting Started & Prerequisites
 
-1. **Java Development Kit (JDK):** Version 17 or higher
-2. **Build Tool:** Maven (or Maven Wrapper)
-3. **IDE:** IntelliJ IDEA (Community or Ultimate) or Eclipse
+Before starting the workshop, ensure you have the following tools installed on your machine:
+
+1. **Java Development Kit (JDK 17+)**: 
+   * Download [Eclipse Temurin JDK 17 (LTS)](https://adoptium.net/) or [Oracle JDK 17](https://www.oracle.com/java/technologies/downloads/#java17).
+   * Verify installation: `java -version`
+2. **Apache Maven (3.8+)**: 
+   * Download and install from [Maven Official Site](https://maven.apache.org/download.cgi).
+   * Verify installation: `mvn -version`
+3. **IDE (Recommended)**: 
+   * [IntelliJ IDEA Community Edition](https://www.jetbrains.com/idea/download/) (Free & excellent for Spring Boot).
+4. **API Testing Tool**: 
+   * [Postman Desktop App](https://www.postman.com/downloads/) (or use VS Code / curl).
 
 ### Running the Application
 ```bash
