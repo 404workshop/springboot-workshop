@@ -76,7 +76,7 @@ curl http://localhost:8080/api/products
 | **Maven** | 3.8+ *or* use wrapper | [Maven](https://maven.apache.org/download.cgi) or just use `.\mvnw.cmd` | `mvn -version` or `.\mvnw.cmd --version` |
 | **VS Code** | Latest | [VS Code](https://code.visualstudio.com/) | — |
 | **PostgreSQL** *(optional, for production profile)* | 16 | [PostgreSQL](https://www.postgresql.org/download/) or `winget install PostgreSQL.PostgreSQL.16` | `psql --version` |
-| **Postman / curl** | — | [Postman](https://www.postman.com/downloads/) | `curl --version` |
+| **curl** | — | Preinstalled on macOS/Linux; Windows 10+ includes `curl.exe` | `curl --version` |
 
 **Debugging in VS Code:** Press `F5` → *Debug Spring Boot App* (config in `.vscode/launch.json`). Breakpoints in `ProductController` / `ProductService` will be hit on next Postman/curl request.
 
@@ -147,9 +147,7 @@ Test classes: `ProductServiceTest` (Mockito unit) + `ProductControllerIntegratio
 
 ---
 
-## 📬 API Reference & Testing
-
-**Postman:** Import `postman/Convergence-2026-ECommerce-API.postman_collection.json`
+## 📬 API Reference & Testing (curl-only)
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
