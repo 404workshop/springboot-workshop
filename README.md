@@ -134,12 +134,15 @@ Spring Boot uses **Spring Profiles** to switch configurations cleanly without ed
         spring.datasource.username=${POSTGRES_USER:postgres}
         spring.datasource.password=${POSTGRES_PASSWORD:secret}
         ```
-        Set them via `.env` file (see `.env.example`) or shell:
+        Set them via `.env` file (see `.env.example` - auto-loaded via `spring.config.import=optional:file:.env[.properties]`) or shell:
         ```powershell
-        # Windows PowerShell
+        # Windows PowerShell - load .env manually if needed:
+        Get-Content .env | ForEach-Object { if ($_ -match "^\s*([^#][^=]+)=(.*)$") { Set-Item -Path Env:$($matches[1]) -Value $matches[2].Trim() } }
+        # Or set directly:
         $env:POSTGRES_PASSWORD="mySecret"; $env:SPRING_PROFILES_ACTIVE="production"; .\mvnw.cmd spring-boot:run
         # Linux/macOS
-        POSTGRES_PASSWORD=mySecret SPRING_PROFILES_ACTIVE=production ./mvnw spring-boot:run
+        set -a; source .env; set +a; ./mvnw spring-boot:run
+        # Or: POSTGRES_PASSWORD=mySecret SPRING_PROFILES_ACTIVE=production ./mvnw spring-boot:run
         ```
 
 ### How to Run with Profiles
