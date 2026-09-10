@@ -17,8 +17,9 @@ To regenerate from zero, follow this exact order (verified against `pom.xml:6`, 
 - **Java:** Spring Boot 3 requires **JDK 17**. Machine default is JDK 16 — set `JAVA_HOME=C:\Program Files\Java\jdk-17.0.20` (`java -version` must show 17). Wrapper respects `JAVA_HOME`.
 - **Run (default H2, no DB setup):** `.\mvnw.cmd spring-boot:run` (Linux/macOS: `./mvnw spring-boot:run`)
 - **Run (production Postgres):** `.\mvnw.cmd spring-boot:run "-Dspring-boot.run.profiles=production"` — **PowerShell requires quotes around `-D`** or use `$env:SPRING_PROFILES_ACTIVE="production"; .\mvnw.cmd spring-boot:run`
-- **Tests:** `.\mvnw.cmd test` (H2) · `.\mvnw.cmd test "-Dspring.profiles.active=production"` (Postgres) · single: `.\mvnw.cmd -Dtest=ProductServiceTest test` or `ProductControllerIntegrationTest`
-- **Build:** `.\mvnw.cmd clean compile|test|package|install` · `clean package "-DskipTests"` for JAR
+- **Tests:** `.\mvnw.cmd test` (H2) · `.\mvnw.cmd test "-Dspring.profiles.active=production"` (Postgres) · single class: `.\mvnw.cmd -Dtest=ProductServiceTest test` or `ProductControllerIntegrationTest` · single method: `.\mvnw.cmd -Dtest=ProductServiceTest#testCreateProduct test`
+- **Debug:** `F5` → `Debug Spring Boot App` (`.vscode/launch.json:8`, `mainClass: com.convergence.ecommerce.EcommerceApplication`); or `.\mvnw.cmd spring-boot:run "-Dspring-boot.run.jvmArguments=-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=5005"` + attach to 5005 — breakpoint hits only on next `curl` request
+- **Build:** `.\mvnw.cmd clean compile|test|package|install` · `clean package "-DskipTests"` for JAR · `target/` is gitignored — `git status` shows dirty `target/classes` until `clean`
 
 ## Project Structure
 
