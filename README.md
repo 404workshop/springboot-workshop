@@ -80,9 +80,17 @@ Spring Boot uses **Spring Profiles** to switch configurations cleanly without ed
    ```bash
    .\mvnw.cmd spring-boot:run -Dspring-boot.run.profiles=postgres
    ```
-   * **PostgreSQL Setup & Download:**
-     * Download and install [PostgreSQL Community Server](https://www.postgresql.org/download/).
-     * Create the database in psql or pgAdmin:
+   * **PostgreSQL Setup & Download (Windows):**
+     * **Command-line installation (Winget):**
+       ```powershell
+       winget install PostgreSQL.PostgreSQL.16
+       ```
+     * Or download manually from [PostgreSQL Official Site](https://www.postgresql.org/download/).
+     * Start the PostgreSQL service (if not running):
+       ```powershell
+       net start postgresql-x64-16
+       ```
+     * Create the database via `psql`:
        ```sql
        CREATE DATABASE ecommerce_db;
        ```
