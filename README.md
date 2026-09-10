@@ -148,14 +148,14 @@ Spring Boot uses **Spring Profiles** to switch configurations cleanly without ed
 ```bash
 # Default profile (H2 in-memory, no setup)
 .\mvnw.cmd spring-boot:run
-# OR explicitly:
-.\mvnw.cmd spring-boot:run -Dspring-boot.run.profiles=default
+# OR explicitly (PowerShell requires quotes):
+.\mvnw.cmd spring-boot:run "-Dspring-boot.run.profiles=default"
 
-# Production profile (PostgreSQL)
-.\mvnw.cmd spring-boot:run -Dspring-boot.run.profiles=production
+# Production profile (PostgreSQL) - PowerShell requires quotes around -D
+.\mvnw.cmd spring-boot:run "-Dspring-boot.run.profiles=production"
 
 # Alternative: via environment variable (Linux/macOS)
-SPRING_PROFILES_ACTIVE=production .\mvnw.cmd spring-boot:run
+SPRING_PROFILES_ACTIVE=production ./mvnw spring-boot:run
 # Alternative: via environment variable (Windows PowerShell)
 $env:SPRING_PROFILES_ACTIVE="production"; .\mvnw.cmd spring-boot:run
 ```
@@ -165,9 +165,16 @@ $env:SPRING_PROFILES_ACTIVE="production"; .\mvnw.cmd spring-boot:run
 # Default: tests run with H2 (fast, isolated)
 .\mvnw.cmd test
 
-# Run tests against PostgreSQL (requires running DB)
-.\mvnw.cmd test -Dspring.profiles.active=production
+# Run tests against PostgreSQL (requires running DB) - PowerShell requires quotes
+.\mvnw.cmd test "-Dspring.profiles.active=production"
 ```
+
+**Troubleshooting Production Profile:**
+* `FATAL: password authentication failed for user "postgres"` → Your local PostgreSQL password is not `secret`. Set the real password:
+  ```powershell
+  $env:POSTGRES_PASSWORD="your_real_password"; .\mvnw.cmd spring-boot:run "-Dspring-boot.run.profiles=production"
+  ```
+  Or update `.env` and load it: `$env:POSTGRES_PASSWORD = (Get-Content .env | Select-String POSTGRES_PASSWORD).ToString().Split("=")[1]`
 > For a single test class to always use a profile, annotate it: `@ActiveProfiles("production")` on the test class.
 
 ### Running Tests (TDD & Component Verification)
