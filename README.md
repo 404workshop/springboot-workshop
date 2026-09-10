@@ -86,13 +86,46 @@ Spring Boot uses **Spring Profiles** to switch configurations cleanly without ed
        winget install PostgreSQL.PostgreSQL.16
        ```
      * Or download manually from [PostgreSQL Official Site](https://www.postgresql.org/download/).
-     * Start the PostgreSQL service (if not running):
+     * Check if the PostgreSQL service is running (no admin required):
        ```powershell
-       net start postgresql-x64-16
+       Get-Service -Name "*postgres*"
+       # OR in Command Prompt (cmd):
+       sc query postgresql-x64-16
        ```
-     * Create the database via `psql`:
+     * Start or Restart the service (requires Administrator terminal):
+       ```powershell
+       # PowerShell as Administrator:
+       Start-Service postgresql-x64-16
+       # Command Prompt as Administrator:
+       net start postgresql-x64-16
+       # OR Windows GUI: Win + R -> services.msc -> postgresql-x64-16 -> Start/Restart
+       ```
+     * **Fix `psql` path (Windows `psql` is not recognized by default):**
+       * **Option A (Direct):** Use the absolute path:
+         ```powershell
+         & "C:\Program Files\PostgreSQL\16\bin\psql.exe" -U postgres -c "CREATE DATABASE ecommerce_db;"
+         ```
+       * **Option B (Permanent fix):** Add PostgreSQL to your PATH env variable as Administrator:
+         ```powershell
+         [Environment]::SetEnvironmentVariable("PATH", $env:PATH + ";C:\Program Files\PostgreSQL\16\bin", [EnvironmentVariableTarget]::Machine)
+         # Restart your terminal after this, and psql will work globally!
+         ```
+     * Create and inspect databases/tables via `psql`:
        ```sql
+       -- Create workshop database (once)
        CREATE DATABASE ecommerce_db;
+       
+       -- List all databases
+       \l
+       
+       -- Connect to the workshop database
+       \c ecommerce_db
+       
+       -- List all tables (after the app runs once)
+       \dt
+       
+       -- View table data
+       SELECT * FROM products;
        ```
      * Configure credentials in `src/main/resources/application-production.properties`.
 

@@ -39,15 +39,14 @@ class ProductServiceTest {
         request.setStockQuantity(10);
         request.setCategory("Test Category");
 
-        ProductEntity savedEntity = ProductEntity.builder()
-                .id(1L)
-                .name(request.getName())
-                .description(request.getDescription())
-                .price(request.getPrice())
-                .stockQuantity(request.getStockQuantity())
-                .category(request.getCategory())
-                .createdAt(LocalDateTime.now())
-                .build();
+        ProductEntity savedEntity = new ProductEntity();
+        savedEntity.setId(1L);
+        savedEntity.setName(request.getName());
+        savedEntity.setDescription(request.getDescription());
+        savedEntity.setPrice(request.getPrice());
+        savedEntity.setStockQuantity(request.getStockQuantity());
+        savedEntity.setCategory(request.getCategory());
+        savedEntity.setCreatedAt(LocalDateTime.now());
 
         when(productRepository.save(any(ProductEntity.class))).thenReturn(savedEntity);
 
