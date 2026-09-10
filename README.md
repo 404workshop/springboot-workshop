@@ -52,12 +52,16 @@ Before starting the workshop, ensure you have the bare minimum tools installed:
 
 ### Running & Debugging from Terminal
 
+You can use either installed Maven (`mvn`) or the included Maven Wrapper (`mvnw` / `mvnw.cmd`):
+
 ```bash
 # Navigate to project root
 cd springboot-workshop
 
-# 1. Run the application normally
+# 1. Run the application normally (using Maven or Maven Wrapper)
 mvn spring-boot:run
+# OR on Windows without installing Maven:
+.\mvnw.cmd spring-boot:run
 
 # 2. Run with remote debugging enabled (Suspended on startup on port 5005)
 mvn spring-boot:run -Dspring-boot.run.jvmArguments="-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=5005"
