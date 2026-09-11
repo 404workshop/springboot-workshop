@@ -23,7 +23,7 @@ style: |
 
 <!-- _class: lead invert -->
 
-# Spring Boot 3
+# Spring Boot 4
 
 ## E-Commerce API Workshop
 
@@ -196,7 +196,7 @@ Without IoC/DI you **ship the bug**.
 
 #### Where you see it
 
-* `pom.xml:6` parent `3.2.5`
+* `pom.xml` parent `4.0.8`
 * `@SpringBootApplication`
 * `mvn spring-boot:run`
 * `application.properties:2`
@@ -520,4 +520,3 @@ Tomcat · `DispatcherServlet` · `Jackson` · `Validator` · `HikariCP` · `TxMa
 * 50 lines XML → 3 lines `properties`
 * `new ProductService(mockRepo)` — DB-free test
 * `@Transactional` → `existsById` + `deleteById` atomic
-

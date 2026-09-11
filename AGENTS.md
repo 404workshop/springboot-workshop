@@ -4,7 +4,7 @@
 
 To regenerate from zero, follow this exact order (verified against `pom.xml:6`, `src/main/resources/application*.properties`):
 
-1. **Scaffold:** `https://start.spring.io` → Maven, Java 17, Spring Boot 3.2.5, group `com.convergence`, artifact `ecommerce-api`. Dependencies: `spring-boot-starter-web`, `spring-boot-starter-data-jpa`, `spring-boot-starter-validation`, `postgresql` (runtime), `h2` (runtime), `spring-boot-starter-test`. No Lombok — workshop is intentionally verbose.
+1. **Scaffold:** `https://start.spring.io` → Maven, Java 17, Spring Boot 4.0.8, group `com.convergence`, artifact `ecommerce-api`, package `com.convergence.ecommerce`. Dependencies: Web MVC, Data JPA, Validation, H2 Console, H2, and PostgreSQL. No Lombok — workshop is intentionally verbose.
 2. **Wrapper:** Add custom `mvnw` / `mvnw.cmd` (see `mvnw.cmd:4` — checks `where mvn`, else bootstraps Maven 3.9.6 to `%USERPROFILE%\.m2\wrapper\dists\apache-maven-3.9.6` via PowerShell download). Add `.mvn/wrapper/maven-wrapper.properties` + `maven-wrapper.jar`.
 3. **Config:** `src/main/resources/application.properties` = H2 default (port 8080, `jdbc:h2:mem:ecommercedb`, `H2Dialect`, `ddl-auto=update`, `spring.config.import=optional:file:.env[.properties]`). Copy to `application-production.properties` with `${POSTGRES_URL}`, `${POSTGRES_USER}`, `${POSTGRES_PASSWORD}` + `PostgreSQLDialect`. Add `.env.example` (template, committed) and `.env` (real secrets, gitignored via `.gitignore:2`).
 4. **Code layers (package `com.convergence.ecommerce`):** `EcommerceApplication.java` → DTOs (`dto/Product*DTO.java` with `jakarta.validation`) → `model/ProductEntity.java` (JPA `@Entity`) → `repository/ProductRepository.java` (JpaRepository) → `service/ProductService.java` (constructor injection, `@Transactional`, explicit `mapToResponseDTO`) → `controller/ProductController.java` (explicit constructor, no Lombok) → `exception/GlobalExceptionHandler.java` (`@RestControllerAdvice`).
@@ -14,7 +14,7 @@ To regenerate from zero, follow this exact order (verified against `pom.xml:6`, 
 
 ## Commands
 
-- **Java:** Spring Boot 3 requires **JDK 17**. Machine default is JDK 16 — set `JAVA_HOME=C:\Program Files\Java\jdk-17.0.20` (`java -version` must show 17). Wrapper respects `JAVA_HOME`.
+- **Java:** This Spring Boot 4.0.8 workshop requires **JDK 17**. Machine default is JDK 16 — set `JAVA_HOME=C:\Program Files\Java\jdk-17.0.20` (`java -version` must show 17). Wrapper respects `JAVA_HOME`.
 - **Run (default H2, no DB setup):** `.\mvnw.cmd spring-boot:run` (Linux/macOS: `./mvnw spring-boot:run`)
 - **Run (production Postgres):** `.\mvnw.cmd spring-boot:run "-Dspring-boot.run.profiles=production"` — **PowerShell requires quotes around `-D`** or use `$env:SPRING_PROFILES_ACTIVE="production"; .\mvnw.cmd spring-boot:run`
 - **Tests:** `.\mvnw.cmd test` (H2) · `.\mvnw.cmd test "-Dspring.profiles.active=production"` (Postgres) · single class: `.\mvnw.cmd -Dtest=ProductServiceTest test` or `ProductControllerIntegrationTest` · single method: `.\mvnw.cmd -Dtest=ProductServiceTest#testCreateProduct test`
@@ -23,7 +23,7 @@ To regenerate from zero, follow this exact order (verified against `pom.xml:6`, 
 
 ## Project Structure
 
-- Single-module Maven: `pom.xml:17` (`java.version=17`, parent 3.2.5). Key dirs: `src/main/java/com/convergence/ecommerce/{controller,dto,model,repository,service,exception}/`, `src/main/resources/`.
+- Single-module Maven: `pom.xml` (`java.version=17`, parent 4.0.8). Key dirs: `src/main/java/com/convergence/ecommerce/{controller,dto,model,repository,service,exception}/`, `src/main/resources/`.
 - Entrypoint: `EcommerceApplication.java`. No codegen/migrations — `ddl-auto=update`.
 - `.env` auto-loaded by `application.properties:2` (`spring.config.import=optional:file:.env[.properties]`). Do not assume shell `source .env` happened.
 

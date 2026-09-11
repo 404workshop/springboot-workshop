@@ -1,4 +1,4 @@
-# Convergence 2026 — Spring Boot 3 E-Commerce API Workshop
+# Convergence 2026 — Spring Boot 4 E-Commerce API Workshop
 
 > **Host:** GDGC VNR VJIET · **Format:** 3 Hours · **Level:** 2nd–4th Year Engineering Students  
 > Build a production-grade E-Commerce REST API from scratch: REST → Validation → Service → JPA → PostgreSQL/H2
@@ -16,11 +16,21 @@
 
 **Live-coding branches — checkout to follow along:**
 ```bash
-git checkout step-0-starter   # Starter: Maven, application.properties
-git checkout step-1-rest-dto  # REST + DTOs + @Valid
-git checkout step-2-service-db # JPA Entity + Repository + Service + H2/Postgres
-git checkout step-3-complete  # Global exception handling + tests + profiles
+git switch step-0-starter    # Starter: application + Web MVC
+git switch step-1-rest-dto   # REST + DTOs + validation
+git switch step-2-service-db # JPA Entity + Repository + Service + H2
+git switch step-3-complete   # PostgreSQL + tests + profiles + errors
 ```
+
+Each branch is independently buildable and adds only the dependencies needed for
+that stage:
+
+| Branch | Adds | Main dependency additions |
+|---|---|---|
+| `step-0-starter` | Running application | Web MVC |
+| `step-1-rest-dto` | Product REST API and request validation | Validation |
+| `step-2-service-db` | Persistence and service layer | Data JPA, H2 |
+| `step-3-complete` | Profiles, PostgreSQL, errors, and tests | H2 Console, PostgreSQL, test starters |
 
 ---
 
@@ -50,21 +60,68 @@ Full diagrams & talk notes: [`PRESENTATION.md`](./PRESENTATION.md)
 git clone <your-github-url> springboot-workshop
 cd springboot-workshop
 
-# 2. Verify Java 17 (required — Spring Boot 3 needs JDK 17+)
+# 2. Verify Java 17 (required — this workshop uses Spring Boot 4.0.8)
 java -version
 # → openjdk 17.x  or Oracle JDK 17.x
 
-# 3. Run — zero setup, uses H2 in-memory DB
-.\mvnw.cmd spring-boot:run
-# Linux/macOS: ./mvnw spring-boot:run
+# 3. Linux/macOS only: make the Maven wrapper executable
+chmod +x mvnw
 
-# 4. Test
+# 4. Run — zero Maven/database setup, uses H2 in-memory DB
+# Windows PowerShell: .\mvnw.cmd spring-boot:run
+# Linux/macOS:       ./mvnw spring-boot:run
+
+# 5. Test
 curl http://localhost:8080/api/products
 # → []   (empty list — H2 ready)
 # H2 Console: http://localhost:8080/h2-console  (JDBC URL: jdbc:h2:mem:ecommercedb, User: sa)
 ```
 
-> No Maven install needed — `mvnw`/`mvnw.cmd` auto-downloads Maven 3.9.6 on first run.
+> No Maven install is needed. This repository includes the Maven Wrapper (`mvnw`/`mvnw.cmd`), which downloads Maven 3.9.6 on first use. A normal `git clone` preserves the executable bit on `mvnw`; run `chmod +x mvnw` if the repository was downloaded as a ZIP or the permission was not preserved.
+
+### Why there is no `mvn archetype` command here
+This project is already generated and includes its wrapper, so you do not need Maven installed to start it. Maven archetypes are templates for generating a generic Maven project; Spring Boot projects are normally created with [Spring Initializr](https://start.spring.io) instead. The exact Initializr settings used for this workshop are documented in `AGENTS.md`. After generating or cloning a project, the Maven Wrapper is the recommended way to run it:
+
+```bash
+./mvnw spring-boot:run       # Linux/macOS
+.\mvnw.cmd spring-boot:run   # Windows
+```
+
+### Generate a matching starter skeleton
+If you want to recreate the workshop's initial project before checking out the branches, use these Spring Initializr settings:
+
+| Setting | Value |
+|---|---|
+| Project | Maven |
+| Language | Java |
+| Spring Boot | `4.0.8` |
+| Group | `com.convergence` |
+| Artifact | `ecommerce-api` |
+| Package name | `com.convergence.ecommerce` |
+| Packaging | Jar |
+| Java | 17 |
+
+Add **Spring Web MVC**, **Spring Data JPA**, **Validation**, **PostgreSQL Driver**, and **H2 Console**. Select stable `4.0.8`, not a snapshot or milestone.
+
+The package name must be entered explicitly. Otherwise Initializr derives `com.convergence.ecommerce_api` from the hyphenated artifact name, which differs from this repository. Initializr will also generate `EcommerceApiApplication`; that starter class can be renamed to `EcommerceApplication` if you want it to match this repository exactly.
+
+The same skeleton can be downloaded without Maven:
+
+```bash
+curl "https://start.spring.io/starter.zip?type=maven-project&language=java&javaVersion=17&bootVersion=4.0.8&groupId=com.convergence&artifactId=ecommerce-api&name=ecommerce-api&packageName=com.convergence.ecommerce&packaging=jar&dependencies=webmvc,data-jpa,validation,h2console,h2,postgresql" -o ecommerce-api.zip
+unzip ecommerce-api.zip
+cd ecommerce-api
+chmod +x mvnw
+./mvnw spring-boot:run
+```
+
+After confirming the generated starter runs, it can be discarded; the workshop branches contain the progressively completed version:
+
+```bash
+git clone <your-github-url> springboot-workshop
+cd springboot-workshop
+git checkout step-0-starter
+```
 
 ---
 
@@ -268,7 +325,7 @@ brew services start postgresql@16          # macOS
 <details>
 <summary><b>The JAVA_HOME environment variable is not defined correctly / release version 17 not supported</b></summary>
 
-Spring Boot 3 requires JDK 17+. You have JDK 16 active. Set `JAVA_HOME` to JDK 17:
+This workshop uses Spring Boot 4.0.8 and requires JDK 17+. If an older JDK is active, set `JAVA_HOME` to JDK 17:
 ```powershell
 [Environment]::SetEnvironmentVariable("JAVA_HOME", "C:\Program Files\Java\jdk-17.0.20", [EnvironmentVariableTarget]::Machine)
 # Then restart terminal; verify:
