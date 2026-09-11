@@ -10,7 +10,7 @@ To regenerate from zero, follow this exact order (verified against `pom.xml:6`, 
 4. **Code layers (package `com.convergence.ecommerce`):** `EcommerceApplication.java` → DTOs (`dto/Product*DTO.java` with `jakarta.validation`) → `model/ProductEntity.java` (JPA `@Entity`) → `repository/ProductRepository.java` (JpaRepository) → `service/ProductService.java` (constructor injection, `@Transactional`, explicit `mapToResponseDTO`) → `controller/ProductController.java` (explicit constructor, no Lombok) → `exception/GlobalExceptionHandler.java` (`@RestControllerAdvice`).
 5. **Tests:** `ProductServiceTest.java` (Mockito unit, uses setters not builders) + `ProductControllerIntegrationTest.java` (`@SpringBootTest` + `MockMvc`).
 6. **Tooling/docs:** `.vscode/launch.json:8` (`mainClass: com.convergence.ecommerce.EcommerceApplication`), `PRESENTATION.md` (Slides 1-5, Slide 5 is profile-based DI), `README.md` (curl-only).
-7. **Branches (create in order):** `git checkout -b step-0-starter` (pom + config), `step-1-rest-dto` (+DTOs/Controller), `step-2-service-db` (+Entity/Repo/Service), `step-3-complete` (+exception handler + tests + profiles + docs). Current tip is `step-3-complete`.
+7. **Branches (create in order):** `step-0-starter` (application + Web MVC), `step-1-rest-dto` (+DTOs/Controller + validation), `step-2-service-db` (+Entity/Repo/Service + H2 + H2 Console), `step-3-complete` (+exception handler + tests + profiles + PostgreSQL), `step-4-outbound-enrichment` (+RestTemplate + proxy-ready external client + composed response). Current tip is `step-4-outbound-enrichment`.
 
 ## Commands
 
@@ -23,7 +23,7 @@ To regenerate from zero, follow this exact order (verified against `pom.xml:6`, 
 
 ## Project Structure
 
-- Single-module Maven: `pom.xml` (`java.version=17`, parent 4.0.8). Key dirs: `src/main/java/com/convergence/ecommerce/{controller,dto,model,repository,service,exception}/`, `src/main/resources/`.
+- Single-module Maven: `pom.xml` (`java.version=17`, parent 4.0.8). Key dirs: `src/main/java/com/convergence/ecommerce/{client,config,controller,dto,model,repository,service,exception}/`, `src/main/resources/`.
 - Entrypoint: `EcommerceApplication.java`. No codegen/migrations — `ddl-auto=update`.
 - `.env` auto-loaded by `application.properties:2` (`spring.config.import=optional:file:.env[.properties]`). Do not assume shell `source .env` happened.
 

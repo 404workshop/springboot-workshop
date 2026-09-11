@@ -60,9 +60,9 @@ Why Boot · IoC/DI · Profiles
 
 <div class="card" style="border-color:#ef6c00; background:#fff8f0;">
 
-#### 🛠️ 105 min — Code
+#### 🛠️ 120 min — Code
 
-`step-0` → `step-3` live
+`step-0` → `step-4` live
 
 </div>
 
@@ -465,7 +465,7 @@ H2 injected
 </div>
 
 ```
-step-0-starter → curl []  (H2)      step-3-complete + production → psql \dt → products
+step-0-starter → curl []  (Web MVC)      step-3-complete + production → psql \dt → products
 ```
 
 ---
@@ -500,16 +500,17 @@ Tomcat · `DispatcherServlet` · `Jackson` · `Validator` · `HikariCP` · `TxMa
 
 ## Part 2 — Hands-On
 
-### 105 min · `step-0` → `step-3`
+### 120 min · `step-0` → `step-4`
 
 ---
 
 | Step | Branch | Add | File | Time |
 |------|--------|-----|------|------|
-| 0 | `step-0-starter` | Maven + H2 | `pom.xml` | 15 min |
+| 0 | `step-0-starter` | Maven + Web MVC | `pom.xml` | 15 min |
 | 1 | `step-1-rest-dto` | REST + validation | `ProductRequestDTO @NotBlank` | 25 min |
 | 2 | `step-2-service-db` | Entity + Repo + Service | `ProductEntity @Entity` | 35 min |
 | 3 | `step-3-complete` | Handler + tests + profiles | `GlobalExceptionHandler` | 30 min |
+| 4 | `step-4-outbound-enrichment` | RestTemplate + proxy-ready enrichment | `GET /api/products/{id}/summary` | 15 min |
 
 `git checkout step-0-starter` → `.\mvnw.cmd spring-boot:run`
 

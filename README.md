@@ -11,7 +11,7 @@
 |-------|----------|---------|
 | Registration & Setup | 10 min | Clone repo, verify JDK 17 & run default profile (`curl []`) |
 | Concepts Before Code | 45 min | `PRESENTATION.md` — why Spring Boot vs Node/Python/Go, why code in agent era, Boot features, IoC/DI — **expanded** |
-| Hands-on Live Coding | 105 min | Follow git branches `step-0` → `step-3` (pace unchanged, checkpoints trimmed 5 min) |
+| Hands-on Live Coding | 120 min | Follow git branches `step-0` → `step-4` |
 | Q&A & Wrap-up | 20 min | Profiles, `curl`, Postgres, debug + agent-generated code review |
 
 **Live-coding branches — checkout to follow along:**
@@ -20,6 +20,7 @@ git switch step-0-starter    # Starter: application + Web MVC
 git switch step-1-rest-dto   # REST + DTOs + validation
 git switch step-2-service-db # JPA Entity + Repository + Service + H2
 git switch step-3-complete   # PostgreSQL + tests + profiles + errors
+git switch step-4-outbound-enrichment # RestTemplate + proxy + composed response
 ```
 
 Each branch is independently buildable and adds only the dependencies needed for
@@ -31,13 +32,14 @@ that stage:
 | `step-1-rest-dto` | Product REST API and request validation | Validation |
 | `step-2-service-db` | Persistence, service layer, and H2 Console | Data JPA, H2, H2 Console |
 | `step-3-complete` | Profiles, PostgreSQL, errors, and tests | PostgreSQL, test starters |
+| `step-4-outbound-enrichment` | External HTTP enrichment through a proxy-ready client | No new dependency |
 
 ---
 
 ## 🏛️ Architecture at a Glance
 
 ```text
-[ Postman / curl / Frontend ]
+[ curl / Frontend ]
               │  JSON
               ▼
 [ DispatcherServlet ] → [ ProductController @RestController ] → DTO Validation
@@ -123,16 +125,17 @@ cd springboot-workshop
 git checkout step-0-starter
 ```
 
-For the future outbound HTTP exercise, `examples/external-product.json` is the
-entire external response fixture. It intentionally matches the sample local
+For the outbound HTTP exercise, the aligned JSON fixture is served from
+`src/main/resources/static/external-product.json`. It matches the sample local
 product (`Mechanical Keyboard`) so the service-layer enrichment example stays
 easy to follow. No mock server or external account is required.
 
-The completed outbound example is on the separate `feature/resttemplate-proxy`
-branch:
+The completed outbound example is on `step-4-outbound-enrichment`:
 
 ```bash
-git switch feature/resttemplate-proxy
+git switch step-4-outbound-enrichment
+./mvnw spring-boot:run
+curl -X POST http://localhost:8080/api/products -H "Content-Type: application/json" -d '{"name":"Mechanical Keyboard","description":"RGB wireless mechanical keyboard","price":79.99,"stockQuantity":50,"category":"electronics"}'
 curl http://localhost:8080/api/products/1/summary
 ```
 

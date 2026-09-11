@@ -9,4 +9,5 @@ tagged release when complete:
   remote debugging.
 - Add a debugger-friendly Dev Container configuration, including launch and
   attach settings for the Spring Boot application.
-- Add a public DummyJSON variant after the local aligned fixture demo.
+- Optionally add a public DummyJSON variant after the local aligned fixture
+  demo.
