@@ -29,8 +29,8 @@ that stage:
 |---|---|---|
 | `step-0-starter` | Running application | Web MVC |
 | `step-1-rest-dto` | Product REST API and request validation | Validation |
-| `step-2-service-db` | Persistence and service layer | Data JPA, H2 |
-| `step-3-complete` | Profiles, PostgreSQL, errors, and tests | H2 Console, PostgreSQL, test starters |
+| `step-2-service-db` | Persistence, service layer, and H2 Console | Data JPA, H2, H2 Console |
+| `step-3-complete` | Profiles, PostgreSQL, errors, and tests | PostgreSQL, test starters |
 
 ---
 
