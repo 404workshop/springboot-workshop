@@ -123,6 +123,11 @@ cd springboot-workshop
 git checkout step-0-starter
 ```
 
+For the future outbound HTTP exercise, `examples/external-product.json` is the
+entire external response fixture. It intentionally matches the sample local
+product (`Mechanical Keyboard`) so the service-layer enrichment example stays
+easy to follow. No mock server or external account is required.
+
 ---
 
 ## 📋 Prerequisites

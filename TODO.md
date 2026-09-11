@@ -9,6 +9,6 @@ tagged release when complete:
   remote debugging.
 - Add a debugger-friendly Dev Container configuration, including launch and
   attach settings for the Spring Boot application.
-- Add a small outbound `RestTemplate` example with explicit proxy
-  configuration, documenting where proxy host, port, and credentials should be
-  supplied without committing secrets.
+- Add a small outbound `RestTemplate` example using the aligned
+  `examples/external-product.json` fixture as the response, with explicit proxy
+  configuration documented without committing secrets.
