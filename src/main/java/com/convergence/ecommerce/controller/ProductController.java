@@ -2,6 +2,7 @@ package com.convergence.ecommerce.controller;
 
 import com.convergence.ecommerce.dto.ProductRequestDTO;
 import com.convergence.ecommerce.dto.ProductResponseDTO;
+import com.convergence.ecommerce.dto.ProductSummaryDTO;
 import com.convergence.ecommerce.service.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -28,6 +29,11 @@ public class ProductController {
     @GetMapping("/{id}")
     public ResponseEntity<ProductResponseDTO> getProductById(@PathVariable Long id) {
         return ResponseEntity.ok(productService.getProductById(id));
+    }
+
+    @GetMapping("/{id}/summary")
+    public ResponseEntity<ProductSummaryDTO> getProductSummary(@PathVariable Long id) {
+        return ResponseEntity.ok(productService.getProductSummary(id));
     }
 
     @PostMapping

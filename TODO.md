@@ -9,6 +9,4 @@ tagged release when complete:
   remote debugging.
 - Add a debugger-friendly Dev Container configuration, including launch and
   attach settings for the Spring Boot application.
-- Add a small outbound `RestTemplate` example using the aligned
-  `examples/external-product.json` fixture as the response, with explicit proxy
-  configuration documented without committing secrets.
+- Add a public DummyJSON variant after the local aligned fixture demo.

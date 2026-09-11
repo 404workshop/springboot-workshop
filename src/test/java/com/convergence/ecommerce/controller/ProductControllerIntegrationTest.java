@@ -43,6 +43,7 @@ class ProductControllerIntegrationTest {
         mockMvc.perform(get("/api/products"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isArray());
+
     }
 
     @Test

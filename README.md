@@ -128,6 +128,18 @@ entire external response fixture. It intentionally matches the sample local
 product (`Mechanical Keyboard`) so the service-layer enrichment example stays
 easy to follow. No mock server or external account is required.
 
+The completed outbound example is on the separate `feature/resttemplate-proxy`
+branch:
+
+```bash
+git switch feature/resttemplate-proxy
+curl http://localhost:8080/api/products/1/summary
+```
+
+That endpoint combines a database product with the aligned JSON response using
+`RestTemplate`. The regular product endpoints do not depend on the outbound
+request.
+
 ---
 
 ## 📋 Prerequisites

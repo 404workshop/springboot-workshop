@@ -2,6 +2,8 @@ package com.convergence.ecommerce.service;
 
 import com.convergence.ecommerce.dto.ProductRequestDTO;
 import com.convergence.ecommerce.dto.ProductResponseDTO;
+import com.convergence.ecommerce.dto.ProductSummaryDTO;
+import com.convergence.ecommerce.client.ExternalProductClient;
 import com.convergence.ecommerce.model.ProductEntity;
 import com.convergence.ecommerce.repository.ProductRepository;
 import org.springframework.stereotype.Service;
@@ -14,10 +16,11 @@ import java.util.stream.Collectors;
 public class ProductService {
 
     private final ProductRepository productRepository;
+    private final ExternalProductClient externalProductClient;
 
-    // Constructor Injection (Spring DI)
-    public ProductService(ProductRepository productRepository) {
+    public ProductService(ProductRepository productRepository, ExternalProductClient externalProductClient) {
         this.productRepository = productRepository;
+        this.externalProductClient = externalProductClient;
     }
 
     @Transactional(readOnly = true)
@@ -32,6 +35,19 @@ public class ProductService {
         ProductEntity entity = productRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Product not found with id: " + id));
         return mapToResponseDTO(entity);
+    }
+
+    @Transactional(readOnly = true)
+    public ProductSummaryDTO getProductSummary(Long id) {
+        ProductResponseDTO product = getProductById(id);
+        ExternalProductClient.ExternalProductResponse external = externalProductClient.getProduct();
+
+        ProductSummaryDTO summary = new ProductSummaryDTO();
+        summary.setProduct(product);
+        summary.setReferencePrice(external.price());
+        summary.setPriceDifference(product.getPrice() - external.price());
+        summary.setExternalSource("aligned local JSON fixture");
+        return summary;
     }
 
     @Transactional
