@@ -1,0 +1,12 @@
+{
+  "name": "Spring Boot Workshop",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "app",
+  "workspaceFolder": "/workspaces/springboot-workshop",
+  "forwardPorts": [8080],
+  "features": {
+    "ghcr.io/devcontainers/features/copilot-cli:1": {
+      "version": "latest"
+    }
+  }
+}

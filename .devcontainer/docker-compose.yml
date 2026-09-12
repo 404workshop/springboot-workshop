@@ -1,0 +1,6 @@
+services:
+  app:
+    image: mcr.microsoft.com/devcontainers/java:1-17-bookworm
+    volumes:
+      - ..:/workspaces/springboot-workshop:cached
+    command: sleep infinity

@@ -140,6 +140,19 @@ easy to follow. No mock server or external account is required.
 | **PostgreSQL** *(optional, for production profile)* | 16 | [PostgreSQL](https://www.postgresql.org/download/) or `winget install PostgreSQL.PostgreSQL.16` | `psql --version` |
 | **curl** | — | Preinstalled on macOS/Linux; Windows 10+ includes `curl.exe` | `curl --version` |
 
+### Dev Container
+
+The Dev Container is the recommended workshop setup. It provides Java 17, Maven,
+the Maven wrapper, and the Copilot CLI. It works in local VS Code or GitHub
+Codespaces and starts with the default Spring Boot configuration.
+
+Open the repository in VS Code and run **Dev Containers: Reopen in Container**.
+Then start the application from the container terminal:
+
+```bash
+./mvnw spring-boot:run
+```
+
 **Debugging in VS Code:** Press `F5` → *Debug Spring Boot App* (config in `.vscode/launch.json`). Breakpoints in `ProductController` / `ProductService` will be hit on next Postman/curl request.
 
 ---
