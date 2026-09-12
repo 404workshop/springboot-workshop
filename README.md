@@ -162,6 +162,10 @@ the Maven wrapper, the Copilot CLI, and PostgreSQL 16 through Docker Compose.
 This final branch uses the production profile and persistent PostgreSQL database.
 
 Open the repository in VS Code and run **Dev Containers: Reopen in Container**.
+Before starting the container, copy `.env.example` to `.env` and set
+`POSTGRES_PASSWORD`. The `.env` file is ignored by Git and supplies the
+credentials to both Compose services.
+
 Start the application or connect to PostgreSQL from the container terminal:
 
 ```bash
@@ -169,7 +173,7 @@ Start the application or connect to PostgreSQL from the container terminal:
 psql -h database -U postgres -d ecommerce_db
 ```
 
-The demo database credentials are `postgres` / `postgres`.
+The database host inside the Dev Container is `database`. Do not commit `.env`.
 
 ### Optional host setup
 
@@ -206,6 +210,7 @@ SPRING_PROFILES_ACTIVE=default ./mvnw spring-boot:run              # Linux/macOS
 ### B. Production Profile — PostgreSQL (added in the database stage)
 ```bash
 # Create the database once, then configure .env from .env.example.
+# For a host PostgreSQL installation, use localhost in POSTGRES_URL.
 psql -U postgres -c "CREATE DATABASE ecommerce_db;"
 SPRING_PROFILES_ACTIVE=production ./mvnw spring-boot:run
 ```
