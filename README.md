@@ -155,7 +155,39 @@ request.
 | **PostgreSQL** *(optional, for production profile)* | 16 | [PostgreSQL](https://www.postgresql.org/download/) or `winget install PostgreSQL.PostgreSQL.16` | `psql --version` |
 | **curl** | — | Preinstalled on macOS/Linux; Windows 10+ includes `curl.exe` | `curl --version` |
 
-**Debugging in VS Code:** Press `F5` → *Debug Spring Boot App* (config in `.vscode/launch.json`). Breakpoints in `ProductController` / `ProductService` will be hit on next Postman/curl request.
+### Dev Container
+
+The Dev Container is the recommended workshop setup. It provides Java 17, Maven,
+the Maven wrapper, the Copilot CLI, and PostgreSQL 16 through Docker Compose.
+This final branch uses the production profile and persistent PostgreSQL database.
+
+Open the repository in VS Code and run **Dev Containers: Reopen in Container**.
+Start the application or connect to PostgreSQL from the container terminal:
+
+```bash
+./mvnw spring-boot:run
+psql -h database -U postgres -d ecommerce_db
+```
+
+The demo database credentials are `postgres` / `postgres`.
+
+### Optional host setup
+
+The project also runs without a Dev Container if Java 17 is installed:
+
+```bash
+./mvnw spring-boot:run
+```
+
+**Debugging in VS Code:** Press `F5` → *Debug Spring Boot App* (config in `.vscode/launch.json`).
+
+### Workshop progression
+
+- `step-0-starter`: Dev Container and basic Spring Boot app.
+- `step-1-rest-dto`: REST endpoints, DTOs, and validation.
+- `step-2-service-db`: JPA and H2 in-memory persistence.
+- `step-3-complete`: PostgreSQL profile and database container.
+- `step-4-outbound-enrichment`: External product enrichment.
 
 ---
 
@@ -171,17 +203,11 @@ $env:SPRING_PROFILES_ACTIVE="default"; .\mvnw.cmd spring-boot:run  # PowerShell
 SPRING_PROFILES_ACTIVE=default ./mvnw spring-boot:run              # Linux/macOS
 ```
 
-### B. Production Profile — PostgreSQL (Persistent)
+### B. Production Profile — PostgreSQL (added in the database stage)
 ```bash
-# 1. Create DB once
+# Create the database once, then configure .env from .env.example.
 psql -U postgres -c "CREATE DATABASE ecommerce_db;"
-# Windows if psql not in PATH: & "C:\Program Files\PostgreSQL\16\bin\psql.exe" -U postgres -c "CREATE DATABASE ecommerce_db;"
-
-# 2. Set credentials (see .env.example — auto-loaded via spring.config.import=optional:file:.env[.properties])
-# Edit .env: POSTGRES_PASSWORD=your_real_password
-.\mvnw.cmd spring-boot:run "-Dspring-boot.run.profiles=production"
-# env alternative (no quoting needed)
-$env:SPRING_PROFILES_ACTIVE="production"; .\mvnw.cmd spring-boot:run
+SPRING_PROFILES_ACTIVE=production ./mvnw spring-boot:run
 ```
 
 `application-production.properties` externalizes credentials:
@@ -257,19 +283,26 @@ curl.exe -X DELETE http://localhost:8080/api/products/1
 
 ## 🐘 PostgreSQL Essentials (When You Need It)
 
-**Install:**
+**Install PostgreSQL:**
 ```powershell
-winget install PostgreSQL.PostgreSQL.16          # Windows
+winget install PostgreSQL.PostgreSQL.16
+```
+```bash
 sudo apt update && sudo apt install postgresql postgresql-contrib  # Ubuntu/Debian
-brew install postgresql@16                        # macOS
+brew install postgresql@16                                         # macOS
 ```
 
-**psql usage:**
+**Create the application database:**
+```bash
+sudo -u postgres psql -c "CREATE DATABASE ecommerce_db;"  # Linux
+psql -U postgres -c "CREATE DATABASE ecommerce_db;"       # Windows/macOS
+```
+
+**Useful `psql` commands:**
 ```sql
-CREATE DATABASE ecommerce_db;  -- once
-\l                             -- list databases
-\c ecommerce_db                 -- connect
-\dt                            -- list tables (after app has run)
+\l                    -- list databases
+\c ecommerce_db       -- connect
+\dt                   -- list tables (after app has run)
 SELECT * FROM products;
 ```
 
@@ -293,7 +326,7 @@ Or avoid quoting by using env vars: `$env:SPRING_PROFILES_ACTIVE="production"; .
 <details>
 <summary><b>FATAL: password authentication failed for user "postgres"</b></summary>
 
-Your local Postgres password ≠ `secret` (the `.env.example` default). Update `.env`:
+Your local Postgres password differs from `postgres` (the `.env.example` demo default). Update `.env`:
 ```ini
 POSTGRES_PASSWORD=your_real_password
 ```
@@ -301,7 +334,7 @@ Then rerun. Or:
 ```powershell
 $env:POSTGRES_PASSWORD="your_real_password"; .\mvnw.cmd spring-boot:run "-Dspring-boot.run.profiles=production"
 ```
-To reset Postgres password: `psql -U postgres -c "ALTER USER postgres PASSWORD 'secret';"`
+To reset the demo Postgres password: `psql -h localhost -U postgres -W -c "ALTER USER postgres PASSWORD 'postgres';"`
 </details>
 
 <details>
@@ -330,15 +363,27 @@ Check status (no admin needed):
 ```powershell
 Get-Service -Name "*postgres*"          # PowerShell
 sc query postgresql-x64-16             # CMD
-systemctl status postgresql            # Linux
-pg_isready                             # Linux alt
-brew services list | grep postgresql   # macOS
 ```
-Start on other OS:
+
+Linux containers and other non-systemd environments:
 ```bash
-sudo systemctl start postgresql            # Linux
-sudo systemctl enable postgresql           # auto-start on boot
-brew services start postgresql@16          # macOS
+sudo service postgresql start
+sudo service postgresql status
+pg_isready
+```
+
+Linux installations with systemd:
+```bash
+sudo systemctl start postgresql
+sudo systemctl enable postgresql
+sudo systemctl status postgresql
+pg_isready
+```
+
+macOS:
+```bash
+brew services start postgresql@16
+brew services list | grep postgresql
 ```
 </details>
 

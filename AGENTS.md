@@ -32,7 +32,7 @@ To regenerate from zero, follow this exact order (verified against `pom.xml:6`, 
 - **No Lombok** — all DTOs/entities use explicit getters/setters/constructors for workshop readability. Do not re-add.
 - **curl-only** — Postman was removed; `README.md` documents `curl`/`curl.exe` only. Keep `curl.exe` on single line with single-quoted JSON in PowerShell: `curl.exe -X POST http://localhost:8080/api/products -H "Content-Type: application/json" -d '{"name": "..."}'`.
 - **PowerShell quoting:** Every `-D` arg must be quoted (`"-Dspring-boot.run.profiles=production"`), else `Unknown lifecycle phase ".run.profiles=production"`.
-- **Postgres password:** Default `secret` in `.env.example` rarely matches local install → `FATAL: password authentication failed` → update `.env` or `$env:POSTGRES_PASSWORD`.
+- **Postgres password:** The Codespaces Dev Container uses `postgres` in `.env.example`; change it for any non-demo environment.
 - **`psql` PATH (Windows):** Installer not on PATH → use `& "C:\Program Files\PostgreSQL\16\bin\psql.exe"` or add via `[Environment]::SetEnvironmentVariable("PATH", ..., Machine)` + restart terminal.
 - **Service start needs Admin:** `Start-Service postgresql-x64-16` / `net start postgresql-x64-16` requires elevated shell; `Get-Service`/`sc query` does not. Linux: `systemctl status/start postgresql`, macOS: `brew services list/start`.
 - **`.vscode/` is gitignored** (`.gitignore:5` = `.vscode/*` + `!launch.json`/`!extensions.json`) — `settings.json` is ignored, `launch.json`/`extensions.json` stay tracked. `target/` was once committed in `d21f129` → now untracked via `git rm --cached -r target`.

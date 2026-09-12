@@ -1,0 +1,19 @@
+{
+  "name": "Spring Boot Workshop",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "app",
+  "workspaceFolder": "/workspaces/springboot-workshop",
+  "forwardPorts": [8080],
+  "features": {
+    "ghcr.io/devcontainers/features/copilot-cli:1": {
+      "version": "latest"
+    },
+    "ghcr.io/devcontainers/features/postgres-client:1": {}
+  },
+  "containerEnv": {
+    "POSTGRES_URL": "jdbc:postgresql://database:5432/ecommerce_db",
+    "POSTGRES_USER": "postgres",
+    "POSTGRES_PASSWORD": "postgres",
+    "SPRING_PROFILES_ACTIVE": "production"
+  }
+}
