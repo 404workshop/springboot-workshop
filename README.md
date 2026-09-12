@@ -143,15 +143,19 @@ easy to follow. No mock server or external account is required.
 ### Dev Container
 
 The Dev Container is the recommended workshop setup. It provides Java 17, Maven,
-the Maven wrapper, and the Copilot CLI. It works in local VS Code or GitHub
-Codespaces and starts with the default Spring Boot configuration.
+the Copilot CLI, and PostgreSQL 16 through Docker Compose. Open the repository in
+VS Code and run **Dev Containers: Reopen in Container**.
 
 Open the repository in VS Code and run **Dev Containers: Reopen in Container**.
-Then start the application from the container terminal:
+The application uses the `production` profile in this stage. From the container
+terminal:
 
 ```bash
 ./mvnw spring-boot:run
+psql -h database -U postgres -d ecommerce_db
 ```
+
+The demo database credentials are `postgres` / `postgres`.
 
 **Debugging in VS Code:** Press `F5` → *Debug Spring Boot App* (config in `.vscode/launch.json`). Breakpoints in `ProductController` / `ProductService` will be hit on next Postman/curl request.
 
