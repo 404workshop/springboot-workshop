@@ -9,6 +9,13 @@
       "projectName": "ecommerce-api",
       "args": "",
       "env": {}
+    },
+    {
+      "type": "java",
+      "name": "Attach to Spring Boot",
+      "request": "attach",
+      "hostName": "localhost",
+      "port": 5005
     }
   ]
 }
