@@ -146,7 +146,10 @@ The Dev Container is the recommended workshop setup. It provides Java 17, Maven,
 the Copilot CLI, and PostgreSQL 16 through Docker Compose. Open the repository in
 VS Code and run **Dev Containers: Reopen in Container**.
 
-Open the repository in VS Code and run **Dev Containers: Reopen in Container**.
+Before starting the container, copy `.env.example` to `.env` and set
+`POSTGRES_PASSWORD`. The `.env` file is ignored by Git and supplies credentials
+to both Compose services.
+
 The application uses the `production` profile in this stage. From the container
 terminal:
 
@@ -155,7 +158,7 @@ terminal:
 psql -h database -U postgres -d ecommerce_db
 ```
 
-The demo database credentials are `postgres` / `postgres`.
+The database host inside the Dev Container is `database`. Do not commit `.env`.
 
 **Debugging in VS Code:** Press `F5` → *Debug Spring Boot App* (config in `.vscode/launch.json`). Breakpoints in `ProductController` / `ProductService` will be hit on next Postman/curl request.
 
